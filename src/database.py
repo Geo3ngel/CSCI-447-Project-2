@@ -19,3 +19,18 @@ class database:
         
     def get_data(self):
         return self.data
+    
+    def set_data(self, data_array):
+        self.data = data_array
+        
+    def get_attr(self):
+        return self.attributes
+    
+    def get_classifier_col(self):
+        return self.classifier_column
+    
+    def get_classifier_attr_cols(self):
+        return self.classifier_attr_columns
+    
+    def get_missing_symbol(self):
+        return self.missing_symbol

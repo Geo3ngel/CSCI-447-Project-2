@@ -72,6 +72,7 @@ def identify_missing_data(input_db):
         # Check for a missing parameter character:
         if "?" in data:
             # Adds data to que for correction
+            print("Missing data found")
             correction_queue.append(data)
         else:
             # Adds data to normal database (won't have to be modified further via extrapolation)
