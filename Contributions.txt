@@ -1,0 +1,14 @@
+Responsibilities by Group members:
+
+Dana Parker:
+-
+
+George Engel:
+-Pathing Manager
+-Preprocessing of data into usable format
+
+Henry Soule:
+-
+
+Troy Oster:
+-
