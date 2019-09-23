@@ -1,0 +1,146 @@
+% Template taken from https://www.sharelatex.com/templates/journals/template-for-the-journal-of-machine-learning-research-jmlr
+
+\documentclass[twoside,11pt]{article}
+
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+%
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
+
+\usepackage{jmlr2e}
+\usepackage{amsmath}
+% Definitions of handy macros can go here
+
+\newcommand{\dataset}{{\cal D}}
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+% Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
+
+\jmlrheading{1}{2019}{1-10}{9/19}{9/19}{George Engel, Troy Oster, Dana Parker, Henry Soule}
+
+% Short headings should be running head and authors last names
+
+\ShortHeadings{CSCI 447: Project 1}{Engel, Oster, Parker, Soule}
+\firstpageno{1}
+
+\begin{document}
+
+\title{CSCI 447: Project 1}
+
+\author{\name George Engel \email GeoEngel.z@gmail.com \\
+       \addr Department of Engineering\\
+       Montana State University\\
+       Bozemane, MT 59715, USA
+       \AND
+       \name Troy Oster \email toster1011@gmail.com \\
+       \addr Department of Engineering\\
+       Montana State University\\
+       Bozeman, MT 59715, USA
+       \AND
+       \name Dana Parker \email danaharmonparker@gmail.com \\
+       \addr Department of Engineering\\
+       Montana State University\\
+       Bozeman, MT 59715, USA
+       \AND
+       \name Henry Soule \email hsoule427@gmail.com \\
+       \addr Department of Engineering\\
+       Montana State University\\
+       Bozeman, MT 59715, USA}
+
+\editor{Engel et al.}
+
+\maketitle
+
+\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
+
+-Give general idea of what we are doing
+-Summarize our results/findings here too
+
+\end{abstract}
+
+\begin{keywords}
+    TODO: Enter keywords for assignment.
+%   Bayesian Networks, Mixture Models, Chow-Liu Trees
+\end{keywords}
+
+\section{Introduction}
+TODO: Add in as: What it is we are using, and how we are using it
+
+\section{Problem Statement}
+TODO: State what we want to do/how we plan to do it
+
+\section{Hypotheses}
+
+TODO: Add a general hypothesis, and then go into detail for each dataset.
+
+\subsection{Abalone}
+
+\subsection{Car}
+
+\subsection{forestfires}
+
+\subsection{machine}
+
+\subsection{segmentation}
+
+\section{The Algorithm}
+TODO: Add description of the algorithm used, proper credits to an academic article cited in line, and how we went implemented this algorithm.
+
+\section{Our Approach}
+\subsection{Handling missing data} NOTICE: SUBJECT TO CHANGE.
+ We opted to not remove data with missing values that occurs in low quantities, as given the already-small size of the data sets we are working with for this assignment, we thought it best to retain as much data as possible for training purposes. 
+
+Rather, we decided to handle missing attribute values by replacing them with attributes selected randomly from a bootstrap distribution generated from all other data points in the database of the same attribute type that do not contain missing values. 
+
+It is also worth noting that we do not hard code the symbol used for checking for missing values, but rather the missing value symbol is determined in the configuration '.attr' file that is unique for each database. It was handled in this manner due to inconsistencies between data sets with respect to symbols representing missing data.
+
+\subsection{Handling information about Attributes}
+Due to the fact that the databases had some uniqueness about them, rather than changing them directly to fit a generic format, we found it best to add a short and sweet configuration file for each database that would determine certain values when running our code. This way, we can both easily customize our parameters, and not have to rely on something primitive like command line user input. 
+
+The configuration file being referred to is the '.attr' file that exists in the directory of each database. it is required that the respective attribute configuration file ('.attr' file) has the same prefix as the '.data' file for the database in order to function, as our code base looks for the '.data' file in the database directory specified, and then uses the prefix of the file name when locating the attribute file. 
+
+The attribute file contains things like the column headers, column index of the attribute we want to classify, a list of indexes of the parameters used for classification, and finally, the last line is what will be used as the 'missing symbol', which is referenced in section (4.1). When running the program, these values are loaded in after the user selects a database from the list presented, and used accordingly.
+
+\subsection{Converting continuous (discrete) data into categorical}
+
+Since we can’t really deal with continuous attributes when using the Naive Bayes algorithm, we have to convert any continuous (quantitative) data to a categorical format. 
+
+We do so on a column by column basis, beginning with checking if the column contains quantitative data or not by seeing if it can be converted to a float. If any one of the elements of that column can’t be converted, it implies the column is of categorical typing. 
+
+Once we find  column that we know contains discrete data, we can begin converting it using equal width binning. The equal width binning method finds the smallest and largest values of the quantitative data, subtracts the new found max from the min, and divides the result by the amount of bins. The result is the width of each bin!
+
+From there we simply sort the discrete data into their respective bins in the form of the entire row from the database via the pop() function, and then goes on to convert every value in each respective bin to the value range it belongs to. Value range being the bin bounds. Then the rows are simply recompiled into the database, returned, and repeats this cycle for each column.
+
+Side note: It is fairly obvious we didn't choose this method for it’s efficiency, but rather its simplicity, and consistency.
+
+\subsection{Shuffling/Applying Noise}
+
+In addition to implementing our prediction algorithm for the plain version of each data set, we also ran it with a 10\% noise modifier applied to the training data set in order to try and grasp how noise might affect the naive bayes machine learning algorithm. 
+
+We implemented our prediction algorithm on the original version of each data set, and also introduced noise to each data set by randomly selecting 10\% of each data set and the shuffling attribute values. We then ran our algorithm on these shuffled versions of each data set.
+
+\section{Results}
+General summary of results goes here
+
+\section{Conclusions}
+
+TODO: Add general conclusion here
+
+\subsection{Abalone}
+
+\subsection{Car}
+
+\subsection{Forest fires}
+
+\subsection{Machine}
+
+\subsection{Segmentation}
+
+
+% Acknowledgements should go at the end, before appendices and references
+\acks{}
+
+\end{document}
