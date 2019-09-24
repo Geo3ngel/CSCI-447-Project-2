@@ -10,7 +10,6 @@ import os
 
 """ -------------------------------------------------------------
 @param  input_database  The database file (of type .data) to be processed
-
 @return     The pre-processed data from input_db as a database object
             (see database.py)
 @brief      Loads the file contents into a database object
@@ -58,8 +57,8 @@ def read_attributes(directory, data_filename):
     
     # Reads in the indexes of the attributes used for classification
     classifier_attr_cols = []
-    # for cols in  attribute_file.readline().strip('\n').split(','):
-    #     classifier_attr_cols.append(int(cols))
+    for cols in  attribute_file.readline().strip('\n').split(','):
+        classifier_attr_cols.append(int(cols))
         
     missing_symbol = attribute_file.readline().strip('\n')
     
@@ -67,7 +66,6 @@ def read_attributes(directory, data_filename):
     
 """ -------------------------------------------------------------
 @param  input_csv   Comma-seperated string to convert
-
 @return     A set of values found in input_csv
 @brief      Converts comma seperated strings into a set of values
 """
@@ -142,11 +140,9 @@ def equal_width_conversion(database, attribute_col):
 """ -------------------------------------------------------------
 @param  database           Input database to operate upon per @brief
 @param  attribute_count    The amount of expected attributes for each row of data.
-
 @return     input_db, correction_que :
             returns the 'clean' rows of data (input_db),
             and the rows of any malformed data (correction_queue).
-
 @brief      Either removes data with missing parameters,
             or extrapolates missing data using bootstraping methodology.
 """

@@ -1,9 +1,11 @@
-""" -------------------------------------------------------------
+"""  
 @file       database.py
 @authors    George Engel, Troy Oster, Dana Parker, Henry Soule
 @brief      Object that stores the information of
             each data repository for ease of access & manipulation
 """
+
+import random
 
 class database:
     """
@@ -19,7 +21,11 @@ class database:
         self.missing_symbol = symbol
         
     def to_string(self):
-        print(self.data)
+        if len(self.data) < 1:
+            print("[] - Empty")
+        else:
+            for row in self.data:
+                print(row)
         
     def get_data(self):
         return self.data
@@ -38,3 +44,13 @@ class database:
     
     def get_missing_symbol(self):
         return self.missing_symbol
+    
+
+    def get_classifiers(self):
+        class_idx = self.get_classifier_col()
+        classifiers = []
+        for row in self.data:
+            if row[class_idx] not in classifiers:
+                classifiers.append(row[class_idx])
+        
+        return classifiers

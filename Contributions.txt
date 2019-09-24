@@ -1,0 +1,23 @@
+Responsibilities by Group members:
+
+Dana Parker:
+a) General Code %: (TBD once assignment is finished)
+
+b) Specific areas of Responsibilities:
+
+George Engel:
+a) General Code %: (TBD once assignment is finished)
+
+b) Specific areas of Responsibilities:
+    -Pathing Manager
+    -Preprocessing of data into usable format
+
+Henry Soule:
+a) General Code %: (TBD once assignment is finished)
+
+b) Specific areas of Responsibilities:
+
+Troy Oster:
+a) General Code %: (TBD once assignment is finished)
+
+b) Specific areas of Responsibilities:
