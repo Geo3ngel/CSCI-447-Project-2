@@ -5,6 +5,7 @@
 """
 import os
 import process_data
+import k_nn
 from path_manager import pathManager as pm
 
 # Asks for user to select a database from a list presented from current database collection directory.
@@ -53,28 +54,16 @@ database_data = path_manager.find_files(path_manager.get_current_selected_dir(),
 full_path = os.path.join(path_manager.get_current_selected_dir(), database_data)
 
 # Processes the file path of the database into a pre processed database ready to be used as a learning/training set.
-db = process_data.process_database_file(full_path)
+db = process_data.process_database_file(path_manager)
 
 
 ### Sanity checks. TODO: move to a unit test case file.
-normal_data, irregular_data = process_data.identify_missing_data(db.get_data())
+normal_data, irregular_data = process_data.identify_missing_data(db)
 
-corrected_data = process_data.extrapolate_data(normal_data, irregular_data)
-# print("\nNormal Data:")
-# print_database(normal_data)
-
-# print("\nIrregular Data:")
-# print_database(irregular_data)
-
-# print("Corrected Irregular Data:")
-# print_database(corrected_data)
-# print("Irregular data total:", len(irregular_data))
-# print("Regular data total:", len(normal_data))
-# print("Corrected data total:", len(corrected_data))
+corrected_data = process_data.extrapolate_data(normal_data, irregular_data, db.get_missing_symbol())
 
 # This is the total database once the missing values have been filled in.
 repaired_database = normal_data + corrected_data
 
-# print_database(normal_data)
 
 print("\nFinished.")

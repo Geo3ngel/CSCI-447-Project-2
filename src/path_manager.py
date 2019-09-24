@@ -1,3 +1,10 @@
+""" -------------------------------------------------------------
+@file        path_manager.py
+@authors     George Engel, Troy Oster, Dana Parker, Henry Soule
+@brief       Contains all functionality related to navigating
+             the repository file system
+"""
+
 import os
 from pathlib import Path
 
@@ -60,6 +67,7 @@ class pathManager:
         
         return files
                 
+    
     # Returns folders in a specified directory
     def find_folders(self, dir):
         folders = []
