@@ -40,7 +40,7 @@ def get_avg_class(neighbors):
 @param  training_data   Our training data set
 @param  test_point      Point from test data
 @param  class_idx       Index of the classifying attribute for this dataset
-@return neighbors       array of k-nearest neighbors to test_point
+@return                 The predicted class
 '''
 def k_nearest_neighbors(k, type, training_data, test_point, class_idx, class_cols):
     distances = []
@@ -52,6 +52,18 @@ def k_nearest_neighbors(k, type, training_data, test_point, class_idx, class_col
         return get_max_class(neighbors)
     elif type == 'regression':
         return get_avg_class(neighbors)
+
+from copy import deepcopy
+def edited_knn(k, type, training_data, class_idx, class_cols):
+    edited_data = deepcopy(training_data)
+    for idx, point in enumerate(edited_data):
+        correct_class = point[class_idx]
+        predicted_class = k_nearest_neighbors(k, type, edited_data, point class_idx, class_cols)
+        if predicted_class != correct_class:
+            edited_data.remove(point)
+
+
+    
         
         
 
