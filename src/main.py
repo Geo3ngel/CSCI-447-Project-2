@@ -68,5 +68,6 @@ db.set_data(repaired_db)
 
 # process_data.convert(db.get_data())
 # @TODO: Add data type to .attr files (classification or regression)
-# knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[100], db.get_classifier_col(), db.get_classifier_attr_cols())
+# predicted = knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[107], db.get_classifier_col(), db.get_classifier_attr_cols())
+# print(predicted)
 knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols()) 
