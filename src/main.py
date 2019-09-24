@@ -68,4 +68,4 @@ db.set_data(repaired_db)
 
 # process_data.convert(db.get_data())
 
-knn.get_nearest_neighbors(5, db.get_training_data(0, 10), db.get_data()[11], db.get_classifier_col(), db.get_classifier_attr_cols())
+knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[100], db.get_classifier_col(), db.get_classifier_attr_cols())
