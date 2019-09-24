@@ -6,7 +6,7 @@
 
 import os
 import process_data
-import k_nn
+import knn
 from path_manager import pathManager as pm
 import statistics
 
@@ -66,6 +66,6 @@ else:
     
 db.set_data(repaired_db)
 
-process_data.convert(db.get_data())
+# process_data.convert(db.get_data())
 
-db.to_string()
+knn.get_nearest_neighbors(5, db.get_training_data(0, 10), db.get_data()[11], db.get_classifier_col(), db.get_classifier_attr_cols())

@@ -45,7 +45,6 @@ class database:
     def get_missing_symbol(self):
         return self.missing_symbol
     
-
     def get_classifiers(self):
         class_idx = self.get_classifier_col()
         classifiers = []
@@ -54,3 +53,6 @@ class database:
                 classifiers.append(row[class_idx])
         
         return classifiers
+    
+    def get_training_data(self, start_idx, end_idx):
+        return self.data[start_idx : end_idx]
