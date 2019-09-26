@@ -1,10 +1,12 @@
 \documentclass{article}
 \title{CSCI 447 Project 2 Design Document}
 \author{George Engle, Troy Oster, Dana Parker, Henry Soule}
+\usepackage{hanging}
 \begin{document}
 \maketitle
 \section{Introduction}
-For this assignment, we are required to implement five different algorithms: $k$-nearest neighbors, edited $k$-nearest neighbors, condensed $k$-nearest neighbors, $k$-means, and $k$-medoids. We are required to implement all of these algorithms on six different datasets, three of which are classification datasets, and three of which are regression datasets. We are then required to asses the performance of each algorithm using 10-fold cross validation and loss functions of our choosing. The essential purpose of the latter four algorithms is to produce a reduced data set with which to run k-nearest neighbors. Because we are working with reduced data on all algorithms except $k$-nearest neighbors, we hypothesize that the average performance of $k$-nearest neighbors across all six datasets without reduction will be worse than the average performance across the six datasets once reduction has been performed via edited k-nearest neighbors, condensed k-nearest neighbors, k-means, and k-medoids.
+For this assignment, we are required to assess the performance of five different algorithms on six different datasets. The five algorithms used are $k$-nearest neighbors, edited $k$-nearest neighbors, condensed $k$-nearest neighbors, $k$-means, and $k$-medoids.  The essential purpose of the latter four algorithms is to produce a reduced data set with which to run k-nearest neighbors. We have found literature suggesting improved accuracy among nearest neighbor algorithms that employ data reduction [1,2].  Based on this, we have hypothesized that the average accuracy of $k$-nearest neighbors across all six datasets without reduction will be worse than the average accuracy across the six datasets once reduction has been performed via edited k-nearest neighbors, condensed k-nearest neighbors, k-means, and k-medoids.
+%Possible TODO: add in description of loss functions we are using to define 'accuracy'.
 \section{Experimental Design}
 %UML DIAGRAM GOES HERE%
 \subsection*{Components}
@@ -12,7 +14,14 @@ Our design has 5 primary components. $database.py$ is a wrapper class that will 
 \subsection*{Design Decisions}
 Each of the five algorithms we are implementing compute distance between datapoints in each dataset. We have chosen to use euclidean distance for each algorithm. We will be using 0-1 Loss to compute performance of each algorithm on each classification dataset. We will use mean squared error to compute performance of each algorithm on each regression dataset. %TODO K values%
 \section{Plan}
-To test our hypothesis, we need to compute the average performance of $k$-nearest neighbors across all six of our datasets, and the average performance of each of the other four algorithms across all six datasets. Our program will first perform $k$-nearest neighbors on all six our datasets, performing 10-fold cross validation for each dataset. As we perform the algorithm on each dataset, we will store the 0-1 Loss and mean square error for each dataset, respectively.
+To test our hypothesis, we need to compute the average performance of $k$-nearest neighbors across all six of our datasets, and the average performance of each of the other four algorithms across all six datasets. Our program will first perform $k$-nearest neighbors on all six our datasets, performing 10-fold cross validation for each dataset. As we perform our cross-validation for $k$-nearest neighbors on each dataset, we will compute the average loss function (0-1 for classification data, mean squared error for regression) for the current dataset. We will then compute the average overall loss function across all six datasets once we have completed our cross validation for each dataset. \\ \\
+We will then perform 10-fold cross validation using the four other algorithms. Each of these algorithms produces a reduced dataset with which to work. Thus, we will implement each of these algorithms to output the reduced dataset. For each of the reduced datasets produced by each of the four algorithms, we will perform 10-fold cross validation.
 
+\section{Works Cited}
+\begin{hangparas}{.25in}{1}
+[1] Wagner, T. "Convergence of the Edited Nearest Neighbor (Corresp.)." IEEE Transactions on Information Theory, vol. 19, no. 5, 1973, pp. 696?697., doi:10.1109/tit.1973.1055059.
+
+[2] Nitin Bhatia, V. "Survey of Nearest Neighbor Techniques.: International Journal of Computer Science and Information Security, vol. 8, no. 2. 2010.
+\end{hangparas}
 
 \end{document}
