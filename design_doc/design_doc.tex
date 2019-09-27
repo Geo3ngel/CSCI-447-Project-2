@@ -55,6 +55,30 @@ Additionally, we don’t have a static value to symbolize a missing value, but r
     \caption{Figure A: Project 2 Clarification chart}
 \end{center}
 
+\quad For each test, we will use ten-fold cross validation with the equal width binning approach for setting up the training and testing bins from the given dataset.
+
+\subsection*{Handling Tuning}
+
+\quad \quad We will be following the rule of thumb to use the square root of the number of training samples as the initial value for the amount of neighbors (K) used for the nearest neighbors algorithms. From here, however we want to see if we can improve our ability to more accurately represent the model by increasing and decreasing the value of K and checking if it is a better fit.
+
+It is worth noting however, that this method is susceptible to the hill climbing problem, however working our way around that with more iterations would likely result in a drastic increase in the amount of time it takes to find the supposed ‘optimal’ K value, so we may not end up with a perfect solution as we will likely forgo this additional step.
+
+\subsection*{Evaluation}
+
+\quad \quad In order to properly evaluate our implementations, we will split up our evaluation methods for regression and classification based problems into separate functions. This is necessary seeing as classification doesn't involve real values, whereas the regression ones do, hence the innate disconnect and reasoning for identifying and evaluating them separately.
+
+For evaluating regression problems, we need a way of comparing our methods predicted continuous value to the actual continuous value. But we also need this method of measuring our prediction accuracy to be robust with regards to outliers.
+
+So we use Mean Absolute Error (MAE), which measures the sum of the absolute differences between our predicted continuous values and the actual continuous values, and then averages the value by the amount of values compared. ($MAE = \frac{1}{n} \sum_{i=1}^n | y_i - \hat{y}_i|$) As a bonus, it averages the absolute difference is important to note, as it makes MAE resistant to outliers by weighting the individual differences equally. The closer MAE is to 0, the better our predicted line of best fit.
+
+As for evaluating how well our classification predicting implementation performs, we need a way of comparing our predicted classifications and the actual classifications. But this time we don’t really care about outliers, so we use the Mean Squared Error as it tells us how far off our prediction distribution is from the actual distribution (The smaller the MSE, the better our ability to accurately predict the correct classification), and accuracy as metrics for algorithm evaluation. We use accuracy in addition because Mean Squared Error on its own can possibly be 0 on its own which would lead to incorrect classifications.
+
+
+
+\subsection*{UML Diagram}
+\begin{center}
+    \makebox[\textwidth]{\includegraphics[width=4.75in]{uml}}
+\end{center}
 
 \section{Works Cited}
 \begin{hangparas}{.25in}{1}
