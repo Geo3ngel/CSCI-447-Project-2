@@ -70,6 +70,7 @@ def get_performance(k, type, data, class_idx, class_cols):
 @param  class_idx       Index of the classifying attribute for this dataset
 @return                 The predicted class
 '''
+
 def k_nearest_neighbors(k, type, training_data, test_point, class_idx, class_cols):
     distances = []
     for point in training_data:
