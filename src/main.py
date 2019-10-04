@@ -8,7 +8,7 @@ import os
 import process_data
 import knn
 from path_manager import pathManager as pm
-import statistics
+# import statistics
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_database(databases):
@@ -70,4 +70,5 @@ db.set_data(repaired_db)
 # @TODO: Add data type to .attr files (classification or regression)
 # predicted = knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[107], db.get_classifier_col(), db.get_classifier_attr_cols())
 # print(predicted)
-knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols()) 
+# knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols())
+condensed_neighbors = knn.condensed_nn(db.get_training_data(0,100), db.get_classifier_col(), db.get_classifiers())

@@ -34,6 +34,19 @@ def get_avg_class(neighbors):
     classes = [el[0] for el in neighbors]
     return sum(classes) / len(classes)
 
+'''
+@param x    datapoint we want to find nearest point to
+@param z    set we are looking for the nearest point in
+@brief      find the nearest point in set z to datapoint x
+'''
+def find_nearest(x, z, class_cols):
+    min_dist = float("inf")
+    for point in z:
+        dist = euc_distance(x,point,class_cols)
+        if dist < min_dist:
+            min_dist = dist
+    return min_dist
+
 # Calculate perforance
 # I think we will most likely change this function
 # Just using it for now to test edited_knn
@@ -89,6 +102,19 @@ def edited_knn(k, type, training_data, class_idx, class_cols):
                 performance_improving = False
                 break
             print('------------------------------')
+
+
+def condensed_nn(training_data, class_idx, class_cols):
+    z = dict()
+    for x in training_data:
+        curr_len = len(z)
+        x_prime = find_nearest(x, z.values(), class_cols)
+        if x_prime[class_idx] not in z.keys():
+            z[x_prime[class_idx]] = x_prime
+            training_data.remove(x_prime)
+        if len(z) == curr_len: # break if no more points were added to z
+            break
+    return z.values()
 
 
     
