@@ -41,11 +41,13 @@ def get_avg_class(neighbors):
 '''
 def find_nearest(x, z, class_cols):
     min_dist = float("inf")
+    min_point = x
     for point in z:
-        dist = euc_distance(x,point,class_cols)
+        dist = euc_distance(x, point, class_cols)
         if dist < min_dist:
             min_dist = dist
-    return min_dist
+            min_point = point
+    return min_point
 
 # Calculate perforance
 # I think we will most likely change this function

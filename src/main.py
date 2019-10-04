@@ -8,7 +8,7 @@ import os
 import process_data
 import knn
 from path_manager import pathManager as pm
-# import statistics
+import statistics
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_database(databases):
@@ -24,12 +24,12 @@ def select_database(databases):
     while(not chosen):
         print("\nEnter one of the databases displayed:", databases)
         database = input("Entry: ")
+        print("database: ", database)
         if database in databases:
             print("Selected:", database)
             chosen = True
         else:
             print(database, "is an invalid entry. Try again.")
-        
     return database
 
 # Cleaner print outs for the sake of my sanity.
@@ -71,4 +71,4 @@ db.set_data(repaired_db)
 # predicted = knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[107], db.get_classifier_col(), db.get_classifier_attr_cols())
 # print(predicted)
 # knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols())
-condensed_neighbors = knn.condensed_nn(db.get_training_data(0,100), db.get_classifier_col(), db.get_classifiers())
+condensed_neighbors = knn.condensed_nn(db.get_training_data(0,100), db.get_classifier_col(), db.get_classifier_attr_cols())
