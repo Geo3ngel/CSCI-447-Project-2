@@ -72,3 +72,11 @@ db.set_data(repaired_db)
 # print(predicted)
 # knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols())
 condensed_neighbors = knn.condensed_nn(db.get_training_data(0,100), db.get_classifier_col(), db.get_classifier_attr_cols())
+print(condensed_neighbors)
+# data_list = db.get_data()
+# z = dict()
+# point = data_list[0]
+# print(db.get_classifier_col())
+# z[point[db.get_classifier_col()]] = point
+
+# print(point[db.get_classifier_col()] not in z.keys())

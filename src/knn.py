@@ -37,12 +37,15 @@ def get_avg_class(neighbors):
 '''
 @param x    datapoint we want to find nearest point to
 @param z    set we are looking for the nearest point in
-@brief      find the nearest point in set z to datapoint x
+@brief      find the nearest point to x in the set z that has a different class than x
 '''
-def find_nearest(x, z, class_cols):
+def find_nearest(x, z, class_cols, class_idx):
     min_dist = float("inf")
-    min_point = x
+    min_point = None
     for point in z:
+        print("POINT: ", point)
+        if point[class_idx] == x[class_idx]:
+            continue
         dist = euc_distance(x, point, class_cols)
         if dist < min_dist:
             min_dist = dist
@@ -108,16 +111,16 @@ def edited_knn(k, type, training_data, class_idx, class_cols):
 
 
 def condensed_nn(training_data, class_idx, class_cols):
-    z = dict()
+    z = []
     for x in training_data:
-        curr_len = len(z)
-        x_prime = find_nearest(x, z.values(), class_cols)
-        if x_prime[class_idx] not in z.keys():
-            z[x_prime[class_idx]] = x_prime
-            training_data.remove(x_prime)
-        if len(z) == curr_len: # break if no more points were added to z
+        x_prime = find_nearest(x, z, class_cols, class_idx)
+        print("X PRIME: ", x_prime)
+        if not x_prime:
             break
-    return z.values()
+        if x_prime[class_idx] != x[class_idx]:
+            z.append(x_prime)
+            training_data.remove(x_prime)
+    return z
 
 
     
