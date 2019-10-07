@@ -43,7 +43,6 @@ def find_nearest(x, z, class_cols, class_idx):
     min_dist = float("inf")
     min_point = None
     for point in z:
-        print("POINT: ", point)
         if point[class_idx] == x[class_idx]:
             continue
         dist = euc_distance(x, point, class_cols)
@@ -102,24 +101,25 @@ def edited_knn(k, type, training_data, class_idx, class_cols):
             
             past_performance = current_performance
             current_performance = get_performance(k, type, edited_data, class_idx, class_cols)
-            print("Past Performance: ", past_performance)
-            print("Current Performance: ", current_performance)
             if current_performance < past_performance:
                 performance_improving = False
                 break
-            print('------------------------------')
 
 
 def condensed_nn(training_data, class_idx, class_cols):
     z = []
+    # Add the first point from the training data to z
+    z.append(training_data[0])
+    # Then remove it from the training data
+    training_data[0].append('R')
     for x in training_data:
+        if (x[-1] == 'R'): # Skip if point has been tagged for removal
+            continue
         x_prime = find_nearest(x, z, class_cols, class_idx)
-        print("X PRIME: ", x_prime)
-        if not x_prime:
-            break
         if x_prime[class_idx] != x[class_idx]:
-            z.append(x_prime)
-            training_data.remove(x_prime)
+            z.append(x)
+            # Tag x for removal
+            x.append('R')
     return z
 
 

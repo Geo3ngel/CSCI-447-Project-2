@@ -69,22 +69,6 @@ else:
     
 db.set_data(repaired_db)
 
-# <<<<<<< HEAD
-# process_data.convert(db.get_data())
-# @TODO: Add data type to .attr files (classification or regression)
-# predicted = knn.k_nearest_neighbors(5, 'classification', db.get_training_data(0, 99), db.get_data()[107], db.get_classifier_col(), db.get_classifier_attr_cols())
-# print(predicted)
-# knn.edited_knn(5, 'classification', db.get_training_data(0, 100), db.get_classifier_col(), db.get_classifier_attr_cols())
-# condensed_neighbors = knn.condensed_nn(db.get_training_data(0,100), db.get_classifier_col(), db.get_classifier_attr_cols())
-# print(condensed_neighbors)
-# data_list = db.get_data()
-# z = dict()
-# point = data_list[0]
-# print(db.get_classifier_col())
-# z[point[db.get_classifier_col()]] = point
-
-# print(point[db.get_classifier_col()] not in z.keys())
-# =======
 process_data.convert(db.get_data())
 
 # TODO: Add data type to .attr files (classification or regression)
@@ -92,37 +76,37 @@ process_data.convert(db.get_data())
 # -------------------------------------------------------------
 # k-nearest neighbors
 
-# print('\nRUNNING K-NEAREST NEIGHBORS\n')
-# knn_predicted = knn.k_nearest_neighbors(5, \
-#                                     'classification', \
-#                                     db.get_training_data(0, 99), \
-#                                     db.get_data()[107], \
-#                                     db.get_classifier_col(), \
-#                                     db.get_classifier_attr_cols())
+print('\nRUNNING K-NEAREST NEIGHBORS\n')
+knn_predicted = knn.k_nearest_neighbors(5, \
+                                    'classification', \
+                                    db.get_training_data(0, 99), \
+                                    db.get_data()[107], \
+                                    db.get_classifier_col(), \
+                                    db.get_classifier_attr_cols())
 
-# print(knn_predicted)
+print(knn_predicted)
 
 # -------------------------------------------------------------
 # editied k-nearest neighbors
 
-# print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
-# eknn_predicted = knn.edited_knn(5, \
-#                'classification', \
-#                db.get_training_data(0, 100), \
-#                db.get_classifier_col(), \
-#                db.get_classifier_attr_cols())
+print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
+eknn_predicted = knn.edited_knn(5, \
+               'classification', \
+               db.get_training_data(0, 100), \
+               db.get_classifier_col(), \
+               db.get_classifier_attr_cols())
 
-# print(eknn_predicted)
+print(eknn_predicted)
 
 # -------------------------------------------------------------
 # Condensed nearest neighbors
 
 # print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
-# cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
-#                                  db.get_classifier_col(), \
-#                                  db.get_classifier_attr_cols())
+cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
+                                 db.get_classifier_col(), \
+                                 db.get_classifier_attr_cols())
 
-# print(cnn_predicted)
+print(cnn_predicted)
 
 # -------------------------------------------------------------
 # k-means clustering
@@ -135,4 +119,4 @@ print(k_means.get_centroids())
 
 print('\nk_means.get_clusters()')
 print(k_means.get_clusters())
->>>>>>> master
+
