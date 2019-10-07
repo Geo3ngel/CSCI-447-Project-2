@@ -24,6 +24,7 @@ def take_second(el):
     return el[1]
 
 # Auxiliary function to get most common class in set of neighbors
+# @param neighbors  set of tuples in form (class, distance)
 def get_max_class(neighbors):
     classes = [el[0] for el in neighbors]
     return Counter(classes).most_common(1)[0][0]
@@ -31,7 +32,7 @@ def get_max_class(neighbors):
 # Auxiliary function to get mean class for regression
 # TODO: Implement regression function from lecture(?)
 def get_avg_class(neighbors):
-    classes = [el[0] for el in neighbors]
+    classes = [float(el[0]) for el in neighbors]
     return sum(classes) / len(classes)
 
 '''

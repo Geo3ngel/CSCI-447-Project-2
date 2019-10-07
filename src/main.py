@@ -10,6 +10,7 @@ import knn
 from kcluster import kcluster as kc
 from path_manager import pathManager as path_manager
 import statistics
+import validate
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_db(databases):  
@@ -69,54 +70,64 @@ else:
     
 db.set_data(repaired_db)
 
-process_data.convert(db.get_data())
+# COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
+# process_data.convert(db.get_data())
 
 # TODO: Add data type to .attr files (classification or regression)
 
 # -------------------------------------------------------------
 # k-nearest neighbors
 
-print('\nRUNNING K-NEAREST NEIGHBORS\n')
-knn_predicted = knn.k_nearest_neighbors(5, \
-                                    'classification', \
-                                    db.get_training_data(0, 99), \
-                                    db.get_data()[107], \
-                                    db.get_classifier_col(), \
-                                    db.get_classifier_attr_cols())
+# print('\nRUNNING K-NEAREST NEIGHBORS\n')
+# knn_predicted = knn.k_nearest_neighbors(5, \
+#                                     'classification', \
+#                                     db.get_training_data(0, 99), \
+#                                     db.get_data()[107], \
+#                                     db.get_classifier_col(), \
+#                                     db.get_classifier_attr_cols())
 
-print(knn_predicted)
+# print(knn_predicted)
 
 # -------------------------------------------------------------
 # editied k-nearest neighbors
 
-print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
-eknn_predicted = knn.edited_knn(5, \
-               'classification', \
-               db.get_training_data(0, 100), \
-               db.get_classifier_col(), \
-               db.get_classifier_attr_cols())
+# print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
+# eknn_predicted = knn.edited_knn(5, \
+#                'classification', \
+#                db.get_training_data(0, 100), \
+#                db.get_classifier_col(), \
+#                db.get_classifier_attr_cols())
 
-print(eknn_predicted)
+# print(eknn_predicted)
 
 # -------------------------------------------------------------
 # Condensed nearest neighbors
 
 # print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
-cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
-                                 db.get_classifier_col(), \
-                                 db.get_classifier_attr_cols())
+# cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
+#                                  db.get_classifier_col(), \
+#                                  db.get_classifier_attr_cols())
 
-print(cnn_predicted)
+# print(cnn_predicted)
 
 # -------------------------------------------------------------
 # k-means clustering
 
-print('\nRUNNING K-MEANS CLUSTERING\n')
-k_means = kc(5, 300, 0.01)
+# print('\nRUNNING K-MEANS CLUSTERING\n')
+# k_means = kc(5, 300, 0.01)
 
-print('\nk_means.get_centroids()')
-print(k_means.get_centroids())
+# print('\nk_means.get_centroids()')
+# print(k_means.get_centroids())
 
-print('\nk_means.get_clusters()')
-print(k_means.get_clusters())
+# print('\nk_means.get_clusters()')
+# print(k_means.get_clusters())
+
+# -------------------------------------------------------------
+# k-fold cross validation
+
+print("RUNNING K-FOLD CROSS VALIDATION")
+
+binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
+
+validate.k_fold(10, binned_data, bin_lengths, db, False)
 

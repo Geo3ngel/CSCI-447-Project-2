@@ -245,3 +245,21 @@ def shuffle_data(training_data, percent, attribute):
         # print("Data Shuffled by",(percent*100),"%")
     else:
         print("ERROR: can't shuffle more than the size of the database.")
+
+# Prepare data for k-fold
+# Moved this function over from classifier.py in assignment 1
+def separate_data(attributes, data):
+     binSize = int(len(data)/10)
+     bin_lengths = []
+     row_idx = 0
+     return_data = []
+     for index in range(10):
+         bin_lengths.append(binSize)
+     for index in range((len(data)%10 )):
+         bin_lengths[index] += 1
+     for bin_idx in range(len(bin_lengths)):
+        for row in range(bin_lengths[bin_idx]):
+            example = data[row_idx]
+            return_data.append([bin_idx,*example])
+            row_idx += 1
+     return [return_data,bin_lengths]

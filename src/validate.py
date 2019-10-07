@@ -4,9 +4,8 @@
 @brief       Contains all functionality related to k-fold cross-validation
 """
 
-import classifier
 from copy import deepcopy
-from loss_functions import *
+# from loss_functions import *
 import process_data
 
 """ -------------------------------------------------------------
@@ -27,7 +26,9 @@ import process_data
            guess results associated with each bin,
            as every bin will be the test bin at some point.
 """
-def k_fold(k,binned_data_set,bin_lengths, db, shuffle):
+
+import knn
+def k_fold(k, binned_data_set, bin_lengths, db, shuffle):
     #print (binned_data_set)
     binned_guess_results = []
     percent_correct_bins = []
@@ -49,40 +50,35 @@ def k_fold(k,binned_data_set,bin_lengths, db, shuffle):
                 row_idx -=1
             row_idx += 1
 
-        #Remove the bin numbers from our training data, this is done because our classifier does not support bin numbers
+        # Remove the bin numbers from our training data, this is done because our classifier does not support bin numbers
         for row_idx2 in range(len(training_data)):
             training_data[row_idx2].pop(0)
 
         if shuffle:
             training_data = process_data.shuffle_all(training_data,.1)
+        
         # Classify our training data set, so we can calculate the probabilites
-        classified_training_data = classifier.classify_db(attr_headers, training_data, db.get_classifier_col())
+        # classified_training_data = classifier.classify_db(attr_headers, training_data, db.get_classifier_col())
 
         # Calculate the probabilities
-        training_probs = classifier.calc_prob_of_response(classified_training_data)
+        # training_probs = classifier.calc_prob_of_response(classified_training_data)
 
-        # For each row (sample) in our test_data, try to predict its class
+        # For each row (sample) in our test_data, run knn to predict its class
+        # TODO: implement way to pass in the correct classifying function (edited_nn, condensed_nn, etc) as parameter
         for test_row in test_data:
-            predicted = classifier.predict(training_probs, attr_headers, test_row, db)
+            predicted = knn.k_nearest_neighbors(5, 'regression', \
+                                                training_data, test_row, \
+                                                db.get_classifier_col(), db.get_classifier_attr_cols())
             
             # If the class is guessed correctly, append the value to the correct_guesses list
-            if  predicted== test_row[db.get_classifier_col()]:
+            if  predicted == test_row[db.get_classifier_col()]:
                 correct_guesses.append(predicted)
             # If the class is guessed incorrectly, append both the expected and predicted value to the incorrect_guesses list
             else:
                 incorrect_guesses.append([test_row[db.get_classifier_col()],predicted])
                 
         binned_guess_results.append([incorrect_guesses,correct_guesses])
-        recall_values.append(recall_non_binary([incorrect_guesses, correct_guesses], class_list))
-        precision_values.append(precision_non_binary([incorrect_guesses,correct_guesses], class_list))
         percent_correct_bins.append(len(correct_guesses)/(len(incorrect_guesses)+len(correct_guesses)))
         
-    PRECISION = sum(precision_values) / len(precision_values)
-    RECALL = sum(recall_values) / len(recall_values)
-    # print("PRECISION: ", sum(precision_values) / len(precision_values))
-    # print("RECALL: ", sum(recall_values) / len(recall_values))
-    return PRECISION, RECALL, (sum(percent_correct_bins)/len(percent_correct_bins))
-    
-        
-    #print(" \n \n \n Binned Guess Results\n \n \n")
-    #print(binned_guess_results)
+    print(" \n \n \n Binned Guess Results\n \n \n")
+    print(binned_guess_results)
