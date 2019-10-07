@@ -104,13 +104,14 @@ def edited_knn(k, type, training_data, class_idx, class_cols):
             if current_performance < past_performance:
                 performance_improving = False
                 break
+    return edited_data
 
 
 def condensed_nn(training_data, class_idx, class_cols):
     z = []
     # Add the first point from the training data to z
     z.append(training_data[0])
-    # Then remove it from the training data
+    # Then tag it for removal
     training_data[0].append('R')
     for x in training_data:
         if (x[-1] == 'R'): # Skip if point has been tagged for removal
