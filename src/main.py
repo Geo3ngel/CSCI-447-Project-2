@@ -7,7 +7,7 @@
 import os
 import process_data
 import knn
-from kcluster import kcluster as kc
+from kcluster import kcluster
 from path_manager import pathManager as path_manager
 import statistics
 import validate
@@ -111,16 +111,24 @@ db.set_data(repaired_db)
 # print(cnn_predicted)
 
 # -------------------------------------------------------------
-# k-means clustering
+# k-means clustering and k-medoids clustering
 
-# print('\nRUNNING K-MEANS CLUSTERING\n')
-# k_means = kc(5, 300, 0.01)
+# print('\nRUNNING K-MEANS CLUSTERING')
+# kc = kcluster(5, 300, 0.01)
 
 # print('\nk_means.get_centroids()')
-# print(k_means.get_centroids())
+# print(kc.get_centroids())
 
-# print('\nk_means.get_clusters()')
-# print(k_means.get_clusters())
+# for idx, cluster in enumerate(kc.get_kmeans_clusters()):
+#     print('\nk_means.get_clusters()[' + str(idx) + ']')
+#     print(cluster)
+
+# print('\nk_means.get_medoids()')
+# print(kc.get_medoids())
+
+# for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
+#     print('\nk_medoids.get_clusters()[' + str(idx) + ']')
+#     print(cluster)
 
 # -------------------------------------------------------------
 # k-fold cross validation
@@ -130,4 +138,3 @@ print("RUNNING K-FOLD CROSS VALIDATION")
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
 validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression')
-
