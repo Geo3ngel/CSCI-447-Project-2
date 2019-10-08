@@ -2,6 +2,7 @@
 @file        process_data.py
 @authors     George Engel, Troy Oster, Dana Parker, Henry Soule
 @brief       Imports and pre-processes data repositories
+TODO: Make this a Class, update UML
 """
 
 from database import database as db
