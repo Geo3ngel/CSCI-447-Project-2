@@ -2,6 +2,7 @@
 @file        process_data.py
 @authors     George Engel, Troy Oster, Dana Parker, Henry Soule
 @brief       Imports and pre-processes data repositories
+TODO: Make this a Class, update UML
 """
 
 from database import database as db
@@ -246,6 +247,7 @@ def shuffle_data(training_data, percent, attribute):
     else:
         print("ERROR: can't shuffle more than the size of the database.")
 
+# Isn't this just width based binning?
 # Prepare data for k-fold
 # Moved this function over from classifier.py in assignment 1
 def separate_data(attributes, data):
@@ -260,6 +262,6 @@ def separate_data(attributes, data):
      for bin_idx in range(len(bin_lengths)):
         for row in range(bin_lengths[bin_idx]):
             example = data[row_idx]
-            return_data.append([bin_idx,*example])
+            return_data.append([bin_idx, example])
             row_idx += 1
      return [return_data,bin_lengths]
