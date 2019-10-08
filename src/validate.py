@@ -11,7 +11,8 @@ import process_data
 """ -------------------------------------------------------------
 @param  k                   The number of folds we are using for k-fold cross validation
 @param  binned_data_set     A list of examples/samples of a database repository
-@param  bin_lengths         A list containing the lengths of each bin, the index in the list is 
+@param  bin_lengths         A list containing the lengths of each bin, the index in the list is
+@param  type                The type of dataset (either classification or regression)
 
 @return    binned_guess_results: [[<incorrect_guesses>, <correct_guesses>]]
                 incorrect_guesses: [[expected answer,incorrect guess]]
@@ -28,22 +29,24 @@ import process_data
 """
 
 import knn
-def k_fold(k, binned_data_set, bin_lengths, db, shuffle):
-    #print (binned_data_set)
-    binned_guess_results = []
-    percent_correct_bins = []
+def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type):
+    # List to store mean abs error from all k iterations of any regression dataset
+    mae_results = []
+    # List to store 0-1 loss results from all k iterations or any classification dataset
+    loss_results = [] 
     attr_headers = db.get_attr()
     class_list = db.get_classifiers()
-    precision_values = []
-    recall_values = []
     # For each bin in our data
     for bin_number in range(k):
-        incorrect_guesses = []
-        correct_guesses = []
+        print("BIN NUMBER: ", bin_number)
         test_data = []
         training_data = deepcopy(binned_data_set)
         row_idx = 0
-        # Add rows from the main data set to our test_data subset until it is the length of the bin that we are using as our test bin (This is to ensure we stop after finding all of the rows that match the bin we want to use)
+        
+        # Add rows from the main data set to our test_data subset 
+        # until it is the length of the bin that we are using as our 
+        # test bin (This is to ensure we stop after finding all of the 
+        # rows that match the bin we want to use)
         while len(test_data) < bin_lengths[bin_number]:
             if training_data[row_idx][0] == bin_number:
                 test_data.append(training_data.pop(row_idx).copy()[1:])
@@ -63,22 +66,34 @@ def k_fold(k, binned_data_set, bin_lengths, db, shuffle):
         # Calculate the probabilities
         # training_probs = classifier.calc_prob_of_response(classified_training_data)
 
+        loss_results = [] # Set of each 0-1 loss result
+        abs_errors = [] # Set of absolute errors of each regression prediction
         # For each row (sample) in our test_data, run knn to predict its class
-        # TODO: implement way to pass in the correct classifying function (edited_nn, condensed_nn, etc) as parameter
         for test_row in test_data:
-            predicted = knn.k_nearest_neighbors(5, 'regression', \
+            # TODO: implement way to pass in the correct 
+            # classifying function (edited_nn, condensed_nn, etc) as parameter
+            
+            # Guess class with knn
+            predicted = knn.k_nearest_neighbors(5, type, \
                                                 training_data, test_row, \
                                                 db.get_classifier_col(), db.get_classifier_attr_cols())
             
-            # If the class is guessed correctly, append the value to the correct_guesses list
-            if  predicted == test_row[db.get_classifier_col()]:
-                correct_guesses.append(predicted)
-            # If the class is guessed incorrectly, append both the expected and predicted value to the incorrect_guesses list
-            else:
-                incorrect_guesses.append([test_row[db.get_classifier_col()],predicted])
-                
-        binned_guess_results.append([incorrect_guesses,correct_guesses])
-        percent_correct_bins.append(len(correct_guesses)/(len(incorrect_guesses)+len(correct_guesses)))
+            if type == 'classification':
+                if predicted == test_row[db.get_classifier_col()]:
+                    loss_results.append(0)
+                else:
+                    loss_results.append(1)
+
+            elif type == 'regression':
+                abs_errors.append(abs(float(test_row[db.get_classifier_col()]) - predicted))
         
-    print(" \n \n \n Binned Guess Results\n \n \n")
-    print(binned_guess_results)
+        # Compute average 0-1 loss and mean absolute error for this iteration
+        if type == 'classification':
+            loss_results.append(sum(loss_results) / len(loss_results))
+        elif type == 'regression':
+            mae_results.append(sum(abs_errors) / len(abs_errors))
+    
+    print("0-1 LOSS RESULTS: ", loss_results)
+    print("MAE RESULTS: ", mae_results)
+
+        

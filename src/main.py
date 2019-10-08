@@ -129,5 +129,5 @@ print("RUNNING K-FOLD CROSS VALIDATION")
 
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
-validate.k_fold(10, binned_data, bin_lengths, db, False)
+validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression')
 
