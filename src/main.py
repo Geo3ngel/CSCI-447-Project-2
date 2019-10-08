@@ -6,11 +6,11 @@
 
 import os
 import process_data
-import knn
+from knn import knn
 from kcluster import kcluster as kc
 from path_manager import pathManager as path_manager
-import statistics
 import validate
+import statistics
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_db(databases):  
@@ -129,5 +129,7 @@ print("RUNNING K-FOLD CROSS VALIDATION")
 
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
-validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression')
+knn = knn(5, 'regression', db.get_classifier_col(), db.get_classifier_attr_cols())
+
+validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
 

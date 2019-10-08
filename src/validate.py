@@ -13,6 +13,7 @@ import process_data
 @param  binned_data_set     A list of examples/samples of a database repository
 @param  bin_lengths         A list containing the lengths of each bin, the index in the list is
 @param  type                The type of dataset (either classification or regression)
+@param reduction_func       The function we will use to reduce our training set
 
 @return    binned_guess_results: [[<incorrect_guesses>, <correct_guesses>]]
                 incorrect_guesses: [[expected answer,incorrect guess]]
@@ -29,7 +30,7 @@ import process_data
 """
 
 import knn
-def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type):
+def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type, knn, reduction_func = None):
     # List to store mean abs error from all k iterations of any regression dataset
     mae_results = []
     # List to store 0-1 loss results from all k iterations or any classification dataset
@@ -72,11 +73,10 @@ def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type):
         for test_row in test_data:
             # TODO: implement way to pass in the correct 
             # classifying function (edited_nn, condensed_nn, etc) as parameter
-            
+            if reduction_func:
+                training_data = reduction_func(training_data, test_row)
             # Guess class with knn
-            predicted = knn.k_nearest_neighbors(5, type, \
-                                                training_data, test_row, \
-                                                db.get_classifier_col(), db.get_classifier_attr_cols())
+            predicted = knn.k_nearest_neighbors(training_data, test_row)
             
             if type == 'classification':
                 if predicted == test_row[db.get_classifier_col()]:
