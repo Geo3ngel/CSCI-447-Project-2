@@ -133,11 +133,16 @@ db.set_data(repaired_db)
 # -------------------------------------------------------------
 # k-fold cross validation
 
+trainSet = [[2,2,2],[4,4,4]]
+testInstance = [5,5,5]
+k = 1
+
 print("RUNNING K-FOLD CROSS VALIDATION")
 
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
-knn = knn(5, 'regression', db.get_classifier_col(), db.get_classifier_attr_cols())
+knn = knn(1, 'regression', db.get_classifier_col(), db.get_classifier_attr_cols())
 # knn.edited_knn(db.get_training_data(0,100))
-validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
+#validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
 
+print(knn.k_nearest_neighbors(trainSet, testInstance))

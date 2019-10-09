@@ -35,12 +35,6 @@ class knn:
     @param class_cols   the indices of the classifier columns for these points
     @return             the euclidean distance between two points
     """
-    def euc_distance(self, p1, p2):
-        dist = 0
-        for idx in self.class_cols:
-            dist += (float(p1[idx]) - float(p2[idx]))**2
-        
-        return math.sqrt(dist)
 
     # Computes the euclidean distances for any dimension, so long as the data instances are consistent in dimension.
     def euclidean_distance(self, data_instance_a, data_instance_b):
@@ -76,7 +70,7 @@ class knn:
         for point in z:
             if point[self.class_idx] == x[self.class_idx]:
                 continue
-            dist = self.euc_distance(x, point)
+            dist = self.euclidean_distance(x, point)
             if dist < min_dist:
                 min_dist = dist
                 min_point = point
@@ -109,7 +103,7 @@ class knn:
     def k_nearest_neighbors(self, training_data, test_point):
         distances = []
         for point in training_data:
-            distances.append((point[self.class_idx], self.euc_distance(point, test_point)))
+            distances.append((point[self.class_idx], self.euclidean_distance(point, test_point)))
         distances = sorted(distances, key=self.take_second)
         neighbors = distances[0:self.k]
         if self.type == 'classification':
