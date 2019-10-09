@@ -101,13 +101,15 @@ class knn:
     @return                 The predicted class
     '''
     
-    def get_neighbors(self, training, point, k_nearest):
+    def get_k_nearest_neighbors(self, training, point, k_nearest):
+        # Calculates the distance from the point to all other points in the training set.
         distances = []
-        length = len(point)-1
         for iter in range(len(training)):
             dist = self.euclidean_distance(point, training[iter])
             distances.append((training[iter], dist))
         distances.sort(key=operator.itemgetter(1))
+        
+        # Collects a list of k points with the smallest distance to point.
         neighbors = []
         for iter in range(k_nearest):
             neighbors.append(distances[iter][0])
