@@ -78,16 +78,16 @@ def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type, knn, reduction_fu
             if reduction_func:
                 training_data = reduction_func(training_data)
             # Guess class with knn
-            predicted = knn.k_nearest_neighbors(training_data, test_row)
+            predicted = knn.k_nearest_neighbors(training_data, test_row[0])
             
             if type == 'classification':
-                if predicted == test_row[db.get_classifier_col()]:
+                if predicted == test_row[0][db.get_classifier_col()]:
                     loss_results.append(0)
                 else:
                     loss_results.append(1)
 
             elif type == 'regression':
-                abs_errors.append(abs(float(test_row[db.get_classifier_col()]) - predicted))
+                abs_errors.append(abs(float(test_row[0][db.get_classifier_col()]) - predicted))
         
         # Compute average 0-1 loss and mean absolute error for this iteration
         if type == 'classification':
