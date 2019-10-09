@@ -153,3 +153,8 @@ validate.k_fold(10, binned_data, \
                 False, 'classification', \
                 knn, 'condensed_nn')
 
+
+# print(knn.k_nearest_neighbors(trainSet, testInstance))
+
+# print(knn.get_k_nearest_neighbors(trainSet, testInstance, 1))
+
