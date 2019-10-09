@@ -57,6 +57,7 @@ def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type, knn, reduction_fu
         # Remove the bin numbers from our training data, this is done because our classifier does not support bin numbers
         for row_idx2 in range(len(training_data)):
             training_data[row_idx2].pop(0)
+            training_data[row_idx2] = training_data[row_idx2][0]
 
         if shuffle:
             training_data = process_data.shuffle_all(training_data,.1)
@@ -70,11 +71,12 @@ def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type, knn, reduction_fu
         loss_results = [] # Set of each 0-1 loss result
         abs_errors = [] # Set of absolute errors of each regression prediction
         # For each row (sample) in our test_data, run knn to predict its class
+
         for test_row in test_data:
             # TODO: implement way to pass in the correct 
             # classifying function (edited_nn, condensed_nn, etc) as parameter
             if reduction_func:
-                training_data = reduction_func(training_data, test_row)
+                training_data = reduction_func(training_data)
             # Guess class with knn
             predicted = knn.k_nearest_neighbors(training_data, test_row)
             

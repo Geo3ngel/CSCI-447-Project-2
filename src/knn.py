@@ -116,6 +116,7 @@ class knn:
         performance_improving = True
         current_performance = 0
         while performance_improving:
+            print("starting an iteration")
             for point in edited_data:
                 correct_class = point[self.class_idx]
                 predicted_class = self.k_nearest_neighbors(edited_data, point)
@@ -125,6 +126,8 @@ class knn:
                 
                 past_performance = current_performance
                 current_performance = self.get_performance(training_data)
+                print("CURRENT PERFORMANCE: ", current_performance)
+                print("PAST PERFORMANCE: ", past_performance)
                 if current_performance < past_performance:
                     performance_improving = False
                     break
