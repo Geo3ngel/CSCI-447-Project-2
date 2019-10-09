@@ -137,6 +137,7 @@ trainSet = [[2,2,2],[4,4,4]]
 testInstance = [5,5,5]
 k = 1
 
+print_db(db.get_data())
 print("RUNNING K-FOLD CROSS VALIDATION")
 
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
