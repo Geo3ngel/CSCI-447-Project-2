@@ -8,6 +8,7 @@
 import math
 from collections import Counter
 from copy import deepcopy
+import operator
 
 class knn:
     def __init__(self, k, type, class_idx, class_cols):
@@ -99,7 +100,20 @@ class knn:
     @param  class_idx       Index of the classifying attribute for this dataset
     @return                 The predicted class
     '''
-
+    
+    def get_neighbors(self, training, point, k_nearest):
+        distances = []
+        length = len(point)-1
+        for iter in range(len(training)):
+            dist = self.euclidean_distance(point, training[iter])
+            distances.append((training[iter], dist))
+        distances.sort(key=operator.itemgetter(1))
+        neighbors = []
+        for iter in range(k_nearest):
+            neighbors.append(distances[iter][0])
+        return neighbors
+    
+    # TODO: Seperate out evaluation function from nearest neigbrs here.
     def k_nearest_neighbors(self, training_data, test_point):
         distances = []
         for point in training_data:

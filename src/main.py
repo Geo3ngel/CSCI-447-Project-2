@@ -147,3 +147,5 @@ knn = knn(1, 'regression', db.get_classifier_col(), db.get_classifier_attr_cols(
 #validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
 
 print(knn.k_nearest_neighbors(trainSet, testInstance))
+
+print(knn.get_k_nearest_neighbors(trainSet, testInstance, 1))
