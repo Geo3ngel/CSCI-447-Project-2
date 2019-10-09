@@ -43,6 +43,13 @@ class knn:
             distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
         return math.sqrt(distance)
     
+    # Computes euclidean distance using only the classifier cols
+    def euc_distance(self, point_a, point_b):
+        distance = 0
+        for x in self.class_cols:
+            distance += pow((float(point_a[x]) - float(point_b[x])), 2)
+        return math.sqrt(distance)
+    
     # Auxiliary function for sorting
     def take_second(self, el):
         return el[1]
@@ -70,7 +77,7 @@ class knn:
         for point in z:
             if point[self.class_idx] == x[self.class_idx]:
                 continue
-            dist = self.euclidean_distance(x, point)
+            dist = self.euc_distance(x, point)
             if dist < min_dist:
                 min_dist = dist
                 min_point = point
@@ -79,15 +86,15 @@ class knn:
     # Calculate perforance
     # I think we will most likely change this function
     # Just using it for now to test edited_knn
-    def get_performance(self, data):
+    def get_performance(self, training_data, validation_data):
         correct_sum = 0
-        for point in data:
+        for point in validation_data:
             actual_class = point[self.class_idx]
-            predicted_class = self.k_nearest_neighbors(data, point)
+            predicted_class = self.k_nearest_neighbors(training_data, point)
             if predicted_class == actual_class:
                 correct_sum += 1
         
-        return correct_sum / len(data)
+        return correct_sum / len(validation_data)
 
         
 
@@ -108,7 +115,7 @@ class knn:
 
         distances = []
         for point in training_data:
-            distances.append((point[self.class_idx], self.euclidean_distance(point, test_point)))
+            distances.append((point[self.class_idx], self.euc_distance(point, test_point)))
         distances = sorted(distances, key=self.take_second)
         neighbors = distances[0:self.k]
         if self.type == 'classification':
@@ -117,7 +124,7 @@ class knn:
             return self.get_avg_class(neighbors)
 
     
-    def edited_knn(self, training_data):
+    def edited_knn(self, training_data, validation_data):
         edited_data = deepcopy(training_data)
         performance_improving = True
         current_performance = 0
@@ -125,20 +132,23 @@ class knn:
             for point in edited_data:
                 correct_class = point[self.class_idx]
                 predicted_class = self.k_nearest_neighbors(edited_data, point)
-                print('CORRECT CLASS: ', correct_class)
-                print("PREDICTED CLASS: ", predicted_class)
-                
+                # print('CORRECT CLASS: ', correct_class)
+                # print("PREDICTED CLASS: ", predicted_class)
                 if predicted_class != correct_class:
-                    print('REMOVING POINT')
+                    # print('REMOVING POINT')
                     edited_data.remove(point)
-                print('------------------------------------')
-                past_performance = current_performance
-                current_performance = self.get_performance(edited_data)
-                print("CURRENT PERFORMANCE: ", current_performance)
-                print("PAST PERFORMANCE: ", past_performance)
-                if current_performance < past_performance:
-                    performance_improving = False
-                    break
+                # print('------------------------------------')
+            # END FOR LOOP
+            #Check performance at end of each scan
+            past_performance = current_performance
+            current_performance = self.get_performance(edited_data, validation_data)
+            print("PAST PERFORMANCE:    ", past_performance)
+            print("CURRENT PERFORMANCE: ", current_performance)
+            print('------------------------------------')
+            if current_performance < past_performance:
+                performance_improving = False
+        # END WHILE LOOP
+        
         return edited_data
 
 
