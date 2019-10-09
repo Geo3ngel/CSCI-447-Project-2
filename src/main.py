@@ -133,6 +133,7 @@ db.set_data(repaired_db)
 # -------------------------------------------------------------
 # k-fold cross validation
 
+print_db(db.get_data())
 print("RUNNING K-FOLD CROSS VALIDATION")
 
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
