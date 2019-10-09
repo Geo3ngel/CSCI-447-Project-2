@@ -138,6 +138,8 @@ print("RUNNING K-FOLD CROSS VALIDATION")
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
 knn = knn(5, 'regression', db.get_classifier_col(), db.get_classifier_attr_cols())
-# knn.edited_knn(db.get_training_data(0,100))
-validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
+
+knn.edited_knn(db.get_training_data(0,20))
+
+# validate.k_fold(10, binned_data, bin_lengths, db, False, 'regression', knn)
 

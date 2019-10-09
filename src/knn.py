@@ -100,6 +100,11 @@ class knn:
     '''
 
     def k_nearest_neighbors(self, training_data, test_point):
+        # print("TRAINING DATA:")
+        # for row in training_data:
+        #     print(row)
+        # print('------------------------------')
+
         distances = []
         for point in training_data:
             distances.append((point[self.class_idx], self.euc_distance(point, test_point)))
@@ -116,16 +121,18 @@ class knn:
         performance_improving = True
         current_performance = 0
         while performance_improving:
-            print("starting an iteration")
             for point in edited_data:
                 correct_class = point[self.class_idx]
                 predicted_class = self.k_nearest_neighbors(edited_data, point)
-
-                if predicted_class != correct_class:
-                    edited_data.remove(point)
+                print('CORRECT CLASS: ', correct_class)
+                print("PREDICTED CLASS: ", predicted_class)
                 
+                if predicted_class != correct_class:
+                    print('REMOVING POINT')
+                    edited_data.remove(point)
+                print('------------------------------------')
                 past_performance = current_performance
-                current_performance = self.get_performance(training_data)
+                current_performance = self.get_performance(edited_data)
                 print("CURRENT PERFORMANCE: ", current_performance)
                 print("PAST PERFORMANCE: ", past_performance)
                 if current_performance < past_performance:
