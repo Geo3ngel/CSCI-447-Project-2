@@ -42,6 +42,13 @@ class knn:
         
         return math.sqrt(dist)
 
+    # Computes the euclidean distances for any dimension, so long as the data instances are consistent in dimension.
+    def euclidean_distance(self, data_instance_a, data_instance_b):
+        distance = 0
+        for x in range(len(data_instance_a)):
+            distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
+        return math.sqrt(distance)
+    
     # Auxiliary function for sorting
     def take_second(self, el):
         return el[1]
