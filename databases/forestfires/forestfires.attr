@@ -2,3 +2,4 @@ X,Y,month,day,FFMC,DMC,DC,ISI,temp,RH,wind,rain,area
 12
 0,1,4,5,6,7,8,9,10,11
 none
+regression

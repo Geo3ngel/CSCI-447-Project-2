@@ -111,3 +111,5 @@ venv.bak/
 src/test.py
 
 src/loss_functions.py
+
+\.vscode/settings\.json
