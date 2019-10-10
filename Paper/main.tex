@@ -69,12 +69,12 @@
 \section{Introduction}
 TODO: Add in as: What it is we are using, and how we are using it
 
-The purpose of this project is to implement five different instance-based learning algorithms: k-nearest neighbors, edited nearest neighbors, condensed nearest neighbors, k-means clustering, and k-medoids clustering. To apply these functions, we perform classification and regression on six data sets via 10-fold cross-validation. These six data sets include Abalone, Car Evaluation, Image Segmentation, Computer Hardware, Forest Fires, and Wine Quality, found on the UCI Machine Learning Repository.
+The purpose of this project is to implement five different instance-based learning algorithms: k-nearest neighbors, edited nearest neighbors, condensed nearest neighbors, k-means clustering, and k-medoids clustering. To apply these functions, we perform classification and regression on six data sets via 10-fold cross-validation. These six data sets we use include Abalone, Car Evaluation, Image Segmentation, Computer Hardware, Forest Fires, and Wine Quality, found on the UCI Machine Learning Repository.
 
 \section{Problem Statement}
 TODO: State what we want to do/how we plan to do it
 
-In this project we are attempting to answer the question, "Does a reduction in the data set, by way of clustering or filtering in the data itself, improve the accuracy of our learning algorithms?" To answer this question, there are several other problems we must tackle beforehand. The first of these problems is to decide how we must pre-process the data. We pre-process our data sets to rid ourselves of the burdens of man-made input errors and any missing attribute values.
+In this project we are attempting to answer the question, "Does a reduction in the data set, by way of clustering or filtering the data itself, improve the accuracy of our learning algorithms?" To answer this question, there are several other problems we must tackle beforehand. The first of these problems is to decide how we must pre-process the data. We pre-process our data sets to rid ourselves of the burdens of man-made input errors and any missing attribute values.
 
 To pre-process the data we must TODO: fill this out.
 
@@ -88,9 +88,9 @@ TODO: finish this loss functions section. Next, we draw conclusions on the accur
 
 TODO: Add a general hypothesis, and then go into detail for each dataset.
 
-In the data sets that we are attempting to classify, Abalone, Car Evaluation, and Image Segmentation, we hypothesize that the algorithms that condense the data set will produce a more accurate model for prediction than the algorithm that does not condense the data. That is to say that the k-nearest neighbors algorithm will produce a less accurate model than the condense nearest neighbor and the edited nearest neighbor algorithm.
+In the data sets that we are attempting to classify, Abalone, Car Evaluation, and Image Segmentation, we hypothesize that k-nearest neighbors after having used condensed nearest neighbors and edited nearest neighbors to reduce the training data will produce a more accurate model for prediction than using k-nearest neighbors without reducing the training data. That is to say that the k-nearest neighbors algorithm will produce a less accurate model than the condense nearest neighbor and the edited nearest neighbor algorithm.
 
-As for the data sets that we are attempting to perform regression against --- Computer Hardware, Forest Fires, and Wine Quality --- we hypothesize that k-medoids clustering will be creating a better learning model than k-means clustering given that k-medoids clustering is more robust to outliers than k-means clustering (TODO: site a source for how we know k-medoids clustering is more robust to outliers). (TODO: make this better lmao)
+As for the data sets that we are attempting to perform regression against --- Computer Hardware, Forest Fires, and Wine Quality --- we hypothesize that using k-medoids clustering will create better training data to run k-nearest neighbors against, thus producing a more accurate learning model, rather than using k-means clustering given that k-medoids clustering is more robust to outliers than k-means clustering (TODO: site a source for how we know k-medoids clustering is more robust to outliers). (TODO: make this better lmao)
 
 \subsection{Abalone}
 
@@ -105,6 +105,11 @@ As for the data sets that we are attempting to perform regression against --- Co
 \section{The Algorithms}
 TODO: Add description of the algorithm used, proper credits to an academic article cited in line, and how we went implemented this algorithm.
 
+TODO: REFERENCESSSESES
+
+We implemented five instance-based learning algorithms for this project: k-nearest neighbors, edited nearest neighbors, condensed nearest neighbors, k-mean clustering, and k-medoids clustering. To perform both classication on Abalone, Car Evaluation, and Image Segmentation, and to perform regression on Computer Hardware, Forest Fires, and Wine Quality, we ultimately must use the k-nearest neighbors algorithm. 
+
+What k-nearest neighbors does is, given a new example \emph{e}, some integer \emph{k}, and training data \emph{T}, it finds the \emph{k} closest examples in \emph{T} to \emph{e}. To evaluate how "close" one example is from another, we find the total of each euclidean distance of every respective attribute between one example and another. In the event we are comparing two discrete attributes, we simply add 1 to the total euclidean distance if the discrete attributes are different, or we don't add to the total euclidean distance if they are the same.
 
 
 \section{Our Approach}
@@ -134,18 +139,22 @@ From there we simply sort the discrete data into their respective bins in the fo
 
 Side note: It is fairly obvious we didn't choose this method for it’s efficiency, but rather its simplicity, and consistency.
 
-\subsection{Shuffling/Applying Noise}
+% \subsection{Shuffling/Applying Noise}
 
-In addition to implementing our prediction algorithm for the plain version of each data set, we also ran it with a 10\% noise modifier applied to the training data set in order to try and grasp how noise might affect the naive bayes machine learning algorithm. 
+% In addition to implementing our prediction algorithm for the plain version of each data set, we also ran it with a 10\% noise modifier applied to the training data set in order to try and grasp how noise might affect the naive bayes machine learning algorithm. 
 
-We implemented our prediction algorithm on the original version of each data set, and also introduced noise to each data set by randomly selecting 10\% of each data set and the shuffling attribute values. We then ran our algorithm on these shuffled versions of each data set.
+% We implemented our prediction algorithm on the original version of each data set, and also introduced noise to each data set by randomly selecting 10\% of each data set and the shuffling attribute values. We then ran our algorithm on these shuffled versions of each data set.
 
 \section{Results}
 General summary of results goes here
 
+After running k-fold cross validation on all of our data sets, we found \_\_\_\_ algorithm(s) performed the best with a 0/1 loss of \_\_\_\_. This value of a 0/1 loss indicates that \_\_\_\_. The \_\_\_ algorithm performed the worst with a 0/1 loss of \_\_\_\_. These results could be due to \_\_\_ . 
+
 \section{Conclusions}
 
 TODO: Add general conclusion here
+
+To conclude, based on the results of our experiments, \_\_\_\_ algorithms performed the best. This conclusion (confirms/disproves) our hypothesis that the condensed nearest neighbors and edited nearest neighbors algorithms would perform better than regular k-nearest neighbors. We believe this conclusion to be the result of \_\_\_\_.
 
 \subsection{Abalone}
 
