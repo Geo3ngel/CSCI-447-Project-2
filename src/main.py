@@ -7,7 +7,7 @@
 import os
 import process_data
 from knn import knn
-from kcluster import kcluster as kc
+from kcluster import kcluster
 from path_manager import pathManager as path_manager
 import validate
 import statistics
@@ -132,22 +132,22 @@ for row in db.get_data():
 # -------------------------------------------------------------
 # k-means clustering and k-medoids clustering
 
-# print('\nRUNNING K-MEANS CLUSTERING')
-# kc = kcluster(5, 300, 0.01)
+print('\nRUNNING K-MEANS CLUSTERING')
+kc = kcluster(5, 10, db.get_data())
 
-# print('\nk_means.get_centroids()')
-# print(kc.get_centroids())
+print('\nk_means.get_centroids()')
+print(kc.get_centroids())
 
-# for idx, cluster in enumerate(kc.get_kmeans_clusters()):
-#     print('\nk_means.get_clusters()[' + str(idx) + ']')
-#     print(cluster)
+for idx, cluster in enumerate(kc.get_kmeans_clusters()):
+    print('\nk_means.get_clusters()[' + str(idx) + ']')
+    print(cluster)
 
-# print('\nk_means.get_medoids()')
-# print(kc.get_medoids())
+print('\nk_means.get_medoids()')
+print(kc.get_medoids())
 
-# for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
-#     print('\nk_medoids.get_clusters()[' + str(idx) + ']')
-#     print(cluster)
+for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
+    print('\nk_medoids.get_clusters()[' + str(idx) + ']')
+    print(cluster)
 
 # -------------------------------------------------------------
 # k-fold cross validation
@@ -157,7 +157,7 @@ for row in db.get_data():
 # k = 1
 
 # print_db(db.get_data())
-print("RUNNING K-FOLD CROSS VALIDATION")
+# print("RUNNING K-FOLD CROSS VALIDATION")
 
 # Prepare data for k-fold
 binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())

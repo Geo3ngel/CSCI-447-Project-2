@@ -23,11 +23,11 @@ class kcluster:
     @param  in_db   The input database object to perform our functionality upon
     @brief    The constructor for kcluster
     """
-    def __init__(self, in_num_clusters, in_max_iters, in_tolerance):
-        self.db = self.temp_data('temp_data.txt')
+    def __init__(self, in_num_clusters, in_max_iters, in_db):
+        self.db = in_db
         self.k = in_num_clusters
         self.max_iters = in_max_iters
-        self.tol = in_tolerance
+        # self.tol = in_tolerance
         self.centroids = []
         self.medoids = []
         self.kmeans_clusters = []
@@ -47,30 +47,38 @@ class kcluster:
     def find_attrs_min_max(self):
         attr_mins = [sys.maxsize for i in range(len(self.get_db()[0]))]
         attr_maxs = [-sys.maxsize for i in range(len(self.get_db()[0]))]
+        discrete_attrs_vals = [[] for i in range(len(self.get_db()[0]))]
 
         # For each example in our data set...
         for curr_ex in self.get_db()[:]:
             
             # For each attribute in our current example...
             for attr_idx in range(len(curr_ex)):
+
+                # If our current attribute is continuous...
+                if (type(curr_ex[attr_idx]) != str):
+
+                    # If the current example's attribute value
+                    # at attr_idx is less than
+                    # the current minimum for that attribute...
+                    if (curr_ex[attr_idx] < attr_mins[attr_idx]):
+
+                        # Then set the new minimum
+                        attr_mins[attr_idx] = curr_ex[attr_idx]
+
+                    # If the current example's attribute value
+                    # at attr_idx is less than
+                    # the current minimum for that attribute...
+                    if (curr_ex[attr_idx] > attr_maxs[attr_idx]):
+
+                        # Then set the new maximum
+                        attr_maxs[attr_idx] = curr_ex[attr_idx]
                 
-                # If the current example's attribute value
-                # at attr_idx is less than
-                # the current minimum for that attribute...
-                if (curr_ex[attr_idx] < attr_mins[attr_idx]):
+                # If our current attribute is discrete...
+                else:
+                    discrete_attrs_vals[attr_idx].append(curr_ex[attr_idx])
 
-                    # Then set the new minimum
-                    attr_mins[attr_idx] = curr_ex[attr_idx]
-
-                # If the current example's attribute value
-                # at attr_idx is less than
-                # the current minimum for that attribute...
-                if (curr_ex[attr_idx] > attr_maxs[attr_idx]):
-
-                    # Then set the new maximum
-                    attr_maxs[attr_idx] = curr_ex[attr_idx]
-
-        return attr_mins, attr_maxs
+        return attr_mins, attr_maxs, discrete_attrs_vals
 
     """ ---------------------------------------------------
     @param TODO: add params
@@ -79,7 +87,7 @@ class kcluster:
                 (number of attributes) times k to some number
                 within an attributes respective range of possible values
     """
-    def init_centroids(self, attr_mins, attr_maxs):
+    def init_centroids(self, attr_mins, attr_maxs, discrete_attrs_vals):
         
         # Initialize our list of centroids to
         # a list of zeros of dimensions
@@ -93,12 +101,21 @@ class kcluster:
             # For every attribute...
             for idx in range(len(curr_cent)):
 
-                # Initialize the centroid's attribute value
-                # to some number in the range
-                # of possible attribute values
-                curr_cent[idx] = rand.uniform( \
-                    attr_mins[idx] + 1, \
-                    attr_maxs[idx] - 1)
+                # If the current attribute is continuous...
+                if (len(discrete_attrs_vals[idx]) == 0):
+                
+                    # Initialize the centroid's attribute value
+                    # to some number in the range
+                    # of possible attribute values
+                    curr_cent[idx] = rand.uniform( \
+                        attr_mins[idx] + 1, \
+                        attr_maxs[idx] - 1)
+                
+                # If the current attribute is discrete...
+                else:
+                    rand_idx = rand.randrange(len(discrete_attrs_vals[idx]))
+                    curr_cent[idx] = discrete_attrs_vals[idx][rand_idx]
+                    
 
         self.set_centroids(centroids)
 
@@ -138,24 +155,31 @@ class kcluster:
         # For each
         # (len(x) and len(y) are completely interchangable)
         for attr_idx in range(len(x)):
-            if type(x[attr_idx]) == str:
-                if x[attr_idx] != y[attr_idx]:
-                    distance += 1
-            else:
+
+            # If the current attribute is continuous...
+            if (type(x[attr_idx]) != str):
                 sum += (x[attr_idx] - y[attr_idx])**2
+            
+            # If the current attribute is discrete...
+            else:
+
+                # If the discrete attributes aren't the same...
+                if (x[attr_idx] != y[attr_idx]):
+                    sum += 1
 
         return math.sqrt(sum)
 
-    """ ---------------------------------------------------
-    TODO: add info
-    """
-    def update_centroid(self, centroid, n, examples_in_clust):
-        for idx in range(len(centroid)):
-            centroid[idx] = \
-                (centroid[idx] * (n-1) \
-                + examples_in_clust[idx]) / float(n)
+    # """ ---------------------------------------------------
+    # TODO: add info
+    # """
+    # def update_centroid(self, centroid, n, examples_in_clust, discrete_attrs_vals):
+    #     print(examples_in_clust)
+    #     for attr_idx, attr in enumerate(centroid):
+    #         centroid[attr_idx] = \
+    #             (centroid[attr_idx] * (n-1) \
+    #             + examples_in_clust[attr_idx]) / float(n)
         
-        return centroid
+    #     return centroid
     
     """ ---------------------------------------------------
     TODO: add info
@@ -197,10 +221,10 @@ class kcluster:
         db = self.get_db()[:]
 
         # Get the attribute minimum and maximum values
-        attr_mins, attr_maxs = self.find_attrs_min_max()
+        attr_mins, attr_maxs, discrete_attrs_vals = self.find_attrs_min_max()
 
         # Initialize the centroids randomly
-        self.init_centroids(attr_mins, attr_maxs)
+        self.init_centroids(attr_mins, attr_maxs, discrete_attrs_vals)
         centroids = self.get_centroids()[:]
 
         # Holds the number of examples contained in each cluster
@@ -209,34 +233,83 @@ class kcluster:
         # Holds which cluster each example belongs to
         ex_to_clust = [-1 for i in range(len(self.get_db()))]
 
+        clusters = [[] for i in range(self.get_k())]
+
         # Calculate the centroids
         for curr_iter in range(self.get_max_iters()):
             
             # We need a way to keep track of whether
             # the centroids were changed after an iteration
-            centroids_were_changed = False
+            # TODO: fix to use tolerance?
+            # centroids_were_changed = False
 
-            for curr_ex_idx in range(len(self.get_db())):
+            for ex_idx, ex in enumerate(self.get_db()[:]):
 
-                # Find which cluster we are in
-                cent_idx = self.assign_ex(self.get_db()[curr_ex_idx], True)
+                # # Find which cluster we are in
+                cent_idx = self.assign_ex(ex, True)
 
                 size_of_clust[cent_idx] += 1
 
-                centroids[cent_idx] = self.update_centroid( \
-                    centroids[cent_idx], \
-                    size_of_clust[cent_idx], \
-                    db[curr_ex_idx])
+                # centroids[cent_idx] = self.update_centroid( \
+                #     centroids[cent_idx], \
+                #     size_of_clust[cent_idx], \
+                #     db[curr_ex_idx], \
+                #     discrete_attrs_vals)
                 
-                if (cent_idx != ex_to_clust[curr_ex_idx]):
-                    centroids_were_changed = True
+                # if (cent_idx != ex_to_clust[curr_ex_idx]):
+                #     centroids_were_changed = True
                 
-                ex_to_clust[curr_ex_idx] = cent_idx
+                ex_to_clust[ex_idx] = cent_idx
 
-            if (centroids_were_changed is False):
-                break
+                clusters[cent_idx].append(ex)
 
-        self.set_centroids(centroids)
+            new_centroids = [[] for i in range(len(centroids))]
+
+            # For every centroid...
+            for cent_idx in range(len(centroids)):
+
+                attr_avgs = [0 if len(discrete_attrs_vals[i]) == 0 \
+                    else {} \
+                    for i in range(len(ex))]
+
+                # For every example in that centroid's respective cluster
+                for ex_idx, ex in enumerate(clusters[cent_idx]):
+
+                    # For every attribute in that example...
+                    for attr_idx, attr in enumerate(ex):
+
+                        # If the current attribute is quantitative...
+                        if len(discrete_attrs_vals[attr_idx]) == 0:
+                            attr_avgs[attr_idx] += attr
+                        
+                        # If the current attribute is categorical...
+                        else:
+                            if attr in attr_avgs[attr_idx]:
+                                attr_avgs[attr_idx][attr] += 1
+                            else:
+                                attr_avgs[attr_idx][attr] = 1
+
+                # For every attribute
+                for attr_idx, attr in enumerate(attr_avgs):
+                    
+                    if type(attr) == dict:
+                        max_val = max(attr_avgs[attr_idx].values())
+                        max_key = ''
+                        for key, val in attr_avgs[attr_idx].items():
+                            if val == max_val:
+                                max_key = key
+                        attr_avgs[attr_idx] = max_key
+
+                    else:
+                        if len(clusters[cent_idx]) != 0:
+                            attr_avgs[attr_idx] /= len(clusters[cent_idx])
+
+                new_centroids[cent_idx] = attr_avgs[:]
+
+            # if (centroids_were_changed is False):
+            #     break
+
+            self.set_centroids(new_centroids)
 
     """ ---------------------------------------------------
     TODO: add info
@@ -344,7 +417,7 @@ class kcluster:
         # Initialize list of clusters
         clusters = [[] for i in range(self.get_k())]
 
-        for ex in self.get_db():
+        for ex in self.get_db()[:]:
             cent_idx = self.assign_ex(ex, True)
             clusters[cent_idx].append(ex)
 
