@@ -138,7 +138,11 @@ class kcluster:
         # For each
         # (len(x) and len(y) are completely interchangable)
         for attr_idx in range(len(x)):
-            sum += (x[attr_idx] - y[attr_idx])**2
+            if type(x[attr_idx]) == str:
+                if x[attr_idx] != y[attr_idx]:
+                    distance += 1
+            else:
+                sum += (x[attr_idx] - y[attr_idx])**2
 
         return math.sqrt(sum)
 

@@ -43,7 +43,7 @@ class knn:
         distance = 0
         for x in range(len(data_instance_a)):
             if type(data_instance_a[x]) == str:
-                if data_instance_a[x] == data_instance_b[x]:
+                if data_instance_a[x] != data_instance_b[x]:
                     distance += 1
             else:
                 distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
