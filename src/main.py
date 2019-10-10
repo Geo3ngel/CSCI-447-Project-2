@@ -7,7 +7,7 @@
 import os
 import process_data
 from knn import knn
-from kcluster import kcluster as kc
+from kcluster import kcluster
 from path_manager import pathManager as path_manager
 import validate
 import statistics
@@ -116,22 +116,22 @@ db.convert_discrete_to_float()
 # -------------------------------------------------------------
 # k-means clustering and k-medoids clustering
 
-# print('\nRUNNING K-MEANS CLUSTERING')
-# kc = kcluster(5, 300, 0.01)
+print('\nRUNNING K-MEANS CLUSTERING')
+kc = kcluster(5, 10, db.get_data())
 
-# print('\nk_means.get_centroids()')
-# print(kc.get_centroids())
+print('\nk_means.get_centroids()')
+print(kc.get_centroids())
 
-# for idx, cluster in enumerate(kc.get_kmeans_clusters()):
-#     print('\nk_means.get_clusters()[' + str(idx) + ']')
-#     print(cluster)
+for idx, cluster in enumerate(kc.get_kmeans_clusters()):
+    print('\nk_means.get_clusters()[' + str(idx) + ']')
+    print(cluster)
 
-# print('\nk_means.get_medoids()')
-# print(kc.get_medoids())
+print('\nk_means.get_medoids()')
+print(kc.get_medoids())
 
-# for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
-#     print('\nk_medoids.get_clusters()[' + str(idx) + ']')
-#     print(cluster)
+for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
+    print('\nk_medoids.get_clusters()[' + str(idx) + ']')
+    print(cluster)
 
 # -------------------------------------------------------------
 # k-fold cross validation
@@ -141,23 +141,24 @@ db.convert_discrete_to_float()
 # k = 1
 
 # print_db(db.get_data())
-print("RUNNING K-FOLD CROSS VALIDATION")
+# print("RUNNING K-FOLD CROSS VALIDATION")
 
-binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
+# binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
 
-knn = knn(5, 'classification', db.get_classifier_col(), db.get_classifier_attr_cols())
+# knn = knn(5, 'classification', db.get_classifier_col(), db.get_classifier_attr_cols())
+# kcluster = kcluster(5, 300, db.get_data()[:])
 
-# data = knn.edited_knn(db.get_training_data(0,bin_lengths[0]), \
-#                       validate.get_validation_data(db, bin_lengths[0]))
+# # data = knn.edited_knn(db.get_training_data(0,bin_lengths[0]), \
+# #                       validate.get_validation_data(db, bin_lengths[0]))
 
-shuffled_data = process_data.shuffle_all(db.get_data(), 1)
-training_data = shuffled_data[0:bin_lengths[0]]
+# shuffled_data = process_data.shuffle_all(db.get_data(), 1)
+# training_data = shuffled_data[0:bin_lengths[0]]
 
-print("FULL TRAINING DATA SIZE: ", len(training_data))
-training_data = knn.condensed_nn(training_data)
-# validation_data = validate.get_validation_data(db, bin_lengths[0])
-# training_data = knn.edited_knn(training_data, validation_data)
-print("CONDENSED TRAINING DATA SIZE: ", len(training_data))
+# print("FULL TRAINING DATA SIZE: ", len(training_data))
+# training_data = knn.condensed_nn(training_data)
+# # validation_data = validate.get_validation_data(db, bin_lengths[0])
+# # training_data = knn.edited_knn(training_data, validation_data)
+# print("CONDENSED TRAINING DATA SIZE: ", len(training_data))
 
 #NOTE binned_data needs to still be shuffled somewhere above here
 bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
