@@ -155,6 +155,7 @@ class knn:
         edited_data = deepcopy(training_data)
         performance_improving = True
         current_performance = 0
+        loop_count = 0
         while performance_improving:
             for point in edited_data:
                 correct_class = point[self.class_idx]
@@ -171,10 +172,9 @@ class knn:
             print("PAST PERFORMANCE:    ", past_performance)
             print("CURRENT PERFORMANCE: ", current_performance)
             print('------------------------------------')
-            if current_performance < past_performance:
+            if current_performance < past_performance or loop_count <= 10:
                 performance_improving = False
         # END WHILE LOOP
-        
         return edited_data
 
     
