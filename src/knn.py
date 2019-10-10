@@ -77,8 +77,8 @@ class knn:
         min_dist = float("inf")
         min_point = None
         for point in z:
-            if point[self.class_idx] == x[self.class_idx]:
-                continue
+            # if point[self.class_idx] == x[self.class_idx]:
+            #     continue
             dist = self.euc_distance(x, point)
             if dist < min_dist:
                 min_dist = dist
@@ -190,13 +190,15 @@ class knn:
             for x in training_data:
                 if (x[-1] == 'R'): # Skip if point has been tagged for removal
                     continue
-                print("X: ", x)
+                print("X:   ", x)
                 x_prime = self.find_nearest(x, z)
                 print("X PRIME: ", x_prime)
                 if x_prime[self.class_idx] != x[self.class_idx]:
+                    print("APPENDING X")
                     z.append(x)
                     # Tag x for removal
                     x.append('R')
+                print('----------------------------------')
             past_length = current_length
             current_length = len(z)
             print('PAST LENGTH: ', past_length)

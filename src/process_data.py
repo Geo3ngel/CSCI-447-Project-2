@@ -214,9 +214,8 @@ def shuffle_all(training_data, percent):
     
 # Shuffles X% of the data for an attribute specified by row of dataset.
 def shuffle_data(training_data, percent, attribute):
-    
     shuffling = []
-    
+
     if(percent <= 100):
         num_to_shuffle = int(len(training_data) * percent)
         

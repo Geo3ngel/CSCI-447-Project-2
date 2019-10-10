@@ -147,11 +147,14 @@ knn = knn(5, 'classification', db.get_classifier_col(), db.get_classifier_attr_c
 # data = knn.edited_knn(db.get_training_data(0,bin_lengths[0]), \
 #                       validate.get_validation_data(db, bin_lengths[0]))
 
+shuffled_data = process_data.shuffle_all(db.get_data(), 1)
 training_data = db.get_training_data(0, bin_lengths[0])
+
+
+print("FULL TRAINING DATA SIZE: ", len(training_data))
 training_data = knn.condensed_nn(training_data)
-for row in training_data:
-    print(row)
-# data = knn.condensed_nn()
+print("CONDENSED TRAINING DATA SIZE: ", len(training_data))
+
 
 
 # validate.k_fold(10, binned_data, \
