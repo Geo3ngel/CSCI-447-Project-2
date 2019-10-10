@@ -8,7 +8,7 @@
 import math
 from collections import Counter
 from copy import deepcopy
-import operator
+import random
 
 class knn:
     def __init__(self, k, type, class_idx, class_cols):
@@ -107,22 +107,7 @@ class knn:
     @param  class_idx       Index of the classifying attribute for this dataset
     @return                 The predicted class
     '''
-    
-    def get_k_nearest_neighbors(self, training, point, k_nearest):
-        # Calculates the distance from the point to all other points in the training set.
-        distances = []
-        for iter in range(len(training)):
-            dist = self.euclidean_distance(point, training[iter])
-            distances.append((training[iter], dist))
-        distances.sort(key=operator.itemgetter(1))
-        
-        # Collects a list of k points with the smallest distance to point.
-        neighbors = []
-        for iter in range(k_nearest):
-            neighbors.append(distances[iter][0])
-        return neighbors
-    
-    # TODO: Seperate out evaluation function from nearest neigbrs here.
+
     def k_nearest_neighbors(self, training_data, test_point):
         # print("TRAINING DATA:")
         # for row in training_data:
@@ -153,7 +138,6 @@ class knn:
                 if predicted_class != correct_class:
                     # print('REMOVING POINT')
                     edited_data.remove(point)
-                # print('------------------------------------')
             # END FOR LOOP
             #Check performance at end of each scan
             past_performance = current_performance
@@ -167,19 +151,29 @@ class knn:
         
         return edited_data
 
-
+    
     def condensed_nn(self, training_data):
         z = []
         # Add the first point from the training data to z
-        z.append(training_data[0])
+        rand_idx = random.randint(0, len(training_data)-1)
+        z.append(training_data[rand_idx])
         # Then tag it for removal
-        training_data[0].append('R')
-        for x in training_data:
-            if (x[-1] == 'R'): # Skip if point has been tagged for removal
-                continue
-            x_prime = self.find_nearest(x, z)
-            if x_prime[self.class_idx] != x[self.class_idx]:
-                z.append(x)
-                # Tag x for removal
-                x.append('R')
+        training_data[rand_idx].append('R')
+        past_length = -1
+        current_length = 0
+        while past_length < current_length:
+            for x in training_data:
+                if (x[-1] == 'R'): # Skip if point has been tagged for removal
+                    continue
+                print("X: ", x)
+                x_prime = self.find_nearest(x, z)
+                print("X PRIME: ", x_prime)
+                if x_prime[self.class_idx] != x[self.class_idx]:
+                    z.append(x)
+                    # Tag x for removal
+                    x.append('R')
+            past_length = current_length
+            current_length = len(z)
+            print('PAST LENGTH: ', past_length)
+            print('CURRENT LENGTH: ', current_length)
         return z

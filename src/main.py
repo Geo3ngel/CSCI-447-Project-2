@@ -147,11 +147,17 @@ knn = knn(5, 'classification', db.get_classifier_col(), db.get_classifier_attr_c
 # data = knn.edited_knn(db.get_training_data(0,bin_lengths[0]), \
 #                       validate.get_validation_data(db, bin_lengths[0]))
 
+training_data = db.get_training_data(0, bin_lengths[0])
+training_data = knn.condensed_nn(training_data)
+for row in training_data:
+    print(row)
+# data = knn.condensed_nn()
 
-validate.k_fold(10, binned_data, \
-                bin_lengths, db, \
-                False, 'classification', \
-                knn, 'condensed_nn')
+
+# validate.k_fold(10, binned_data, \
+#                 bin_lengths, db, \
+#                 False, 'classification', \
+#                 knn, 'condensed_nn')
 
 
 # print(knn.k_nearest_neighbors(trainSet, testInstance))
