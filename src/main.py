@@ -70,6 +70,9 @@ else:
     
 db.set_data(repaired_db)
 
+# Convert the discrete data to type float.
+db.convert_discrete_to_float()
+
 # COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
 # process_data.convert(db.get_data())
 

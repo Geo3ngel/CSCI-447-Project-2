@@ -6,6 +6,7 @@
 """
 
 import random
+import process_data
 
 class database:
     """
@@ -19,6 +20,10 @@ class database:
         self.classifier_column = classifier_col
         self.classifier_attr_columns = classifier_attr_cols
         self.missing_symbol = symbol
+        
+    def convert_discrete_to_float(self):
+        self.data = process_data.convert(self.data)
+        print("SELF DATA:", self.data)
         
     def to_string(self):
         if len(self.data) < 1:

@@ -122,6 +122,7 @@ class knn:
         for iter in range(k_nearest):
             neighbors.append(distances[iter][0])
         return neighbors
+    
     def k_nearest_neighbors(self, training_data, test_point):
         # print("TRAINING DATA:")
         # for row in training_data:
@@ -186,6 +187,7 @@ class knn:
         training_data[rand_idx].append('R')
         past_length = -1
         current_length = 0
+        print("Z:",z)
         while past_length < current_length:
             for x in training_data:
                 if (x[-1] == 'R'): # Skip if point has been tagged for removal
