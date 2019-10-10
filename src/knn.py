@@ -8,6 +8,7 @@
 import math
 from collections import Counter
 from copy import deepcopy
+import operator
 import random
 
 class knn:
@@ -108,6 +109,19 @@ class knn:
     @return                 The predicted class
     '''
 
+    def get_k_nearest_neighbors(self, training, point, k_nearest):
+        # Calculates the distance from the point to all other points int he training set.
+        distances = []
+        for iter in range(len(training)):
+            dist=self.euclidean_distance(point, training[iter])
+            distances.append((training[iter], dist))
+        distances.sort(key=operator.itemgetter(1))
+        
+        # Collects a list of k points with the smallest distance to point.
+        neighbors = []
+        for iter in range(k_nearest):
+            neighbors.append(distances[iter][0])
+        return neighbors
     def k_nearest_neighbors(self, training_data, test_point):
         # print("TRAINING DATA:")
         # for row in training_data:
@@ -124,6 +138,17 @@ class knn:
         else:
             return self.get_avg_class(neighbors)
 
+    # Handles voting of each k nearest neighbor to classify point.
+    def majority_vote(self, neighbors):
+        classes = {}
+        for iter in range(len(neighbors)):
+            response = neighbors[iter][-1]
+            if response in classes:
+                classes[response] += 1
+            else:
+                classes[response] = 1
+        sorted_votes = sorted(classes.iteritems(), key=operator.itemgetter(1), reverse=True)
+        return sorted_votes[0][0]
     
     def edited_knn(self, training_data, validation_data):
         edited_data = deepcopy(training_data)
