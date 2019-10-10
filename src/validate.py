@@ -50,6 +50,16 @@ def get_validation_data(db, bin_length):
 """
 
 import knn
+
+def get_validate(bin_lengths, binned_data_set):
+    new_bin_lengths = bin_lengths
+    validate_set = []
+    new_data_set = binned_data_set
+    for idx in range(bin_lengths[len(bin_lengths)-1]):
+        validate_set.append(new_data_set.pop())
+    new_bin_lengths.pop()
+    return new_bin_lengths, validate_set, new_data_set
+
 def k_fold(k, binned_data_set, bin_lengths, db, shuffle, type, knn, reduction_func = None):
     # List to store mean abs error from all k iterations of any regression dataset
     mae_results = []
