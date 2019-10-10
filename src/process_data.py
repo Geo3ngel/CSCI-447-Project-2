@@ -38,9 +38,9 @@ def process_database_file(path_manager):
         
 
     
-    attributes, classifier_column, classifier_attr_cols, missing_symbol = read_attributes(path_manager.get_current_selected_dir(), data_filename)
+    attributes, classifier_column, classifier_attr_cols, missing_symbol, dataset_type = read_attributes(path_manager.get_current_selected_dir(), data_filename)
 
-    return db(db_data, attributes, classifier_column, classifier_attr_cols, missing_symbol)
+    return db(db_data, attributes, classifier_column, classifier_attr_cols, missing_symbol, dataset_type)
 
 # Reads in the attribute file from a database, and returns the attributes as a list
 def read_attributes(directory, data_filename):
@@ -63,7 +63,9 @@ def read_attributes(directory, data_filename):
         
     missing_symbol = attribute_file.readline().strip('\n')
     
-    return attributes, classifier_column, classifier_attr_cols, missing_symbol
+    dataset_type = attribute_file.readline().strip('\n')
+    
+    return attributes, classifier_column, classifier_attr_cols, missing_symbol, dataset_type
     
 """ -------------------------------------------------------------
 @param  input_csv   Comma-seperated string to convert
