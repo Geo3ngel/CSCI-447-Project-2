@@ -1,0 +1,2 @@
+CURRENT DATASET: abalone
+DATA TYPE: classification

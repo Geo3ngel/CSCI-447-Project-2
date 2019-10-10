@@ -176,6 +176,7 @@ class knn:
             print("PAST PERFORMANCE:    ", past_performance)
             print("CURRENT PERFORMANCE: ", current_performance)
             print('------------------------------------')
+            loop_count += 1
             if current_performance < past_performance or loop_count <= 10:
                 performance_improving = False
         # END WHILE LOOP
