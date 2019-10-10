@@ -164,7 +164,7 @@ bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, bin
 
 print("bin lengths \n ---- \n", bin_lengths)
 print("validate_data \n ---- \n", validate_data[1:10])
-print("binned_data nibba \n ---- \n", binned_data[1:10])
+print("binned_data \n ---- \n", binned_data[1:10])
 #NOTE this bitch will probs have to use 9 instead of 10 because we are removing a bin from bin_lengths
 # validate.k_fold(10, binned_data, \
 #                 bin_lengths, db, \
