@@ -24,18 +24,24 @@ def select_db(databases):
     
     chosen = False
     db = ""
+    chosen_dbs = []
     
     # Selection loop for database
     while(not chosen):
-        print("\nEnter one of the databases displayed:", databases)
+        print("\nEnter one of the databases displayed, or 'all' to run for all avalible databases.:", databases)
         db = input("Entry: ")
         print("database:", db)
         if db in databases:
             print("Selected:", db)
+            chosen_dbs.append(db)
+            chosen = True
+        elif db.lower() == "all":
+            print("Running for all Databases.")
+            chosen_dbs = ["abalone", "car", "forestfires", "machine", "segmentation", "wine"]
             chosen = True
         else:
             print(db, "is an invalid entry. Try again.")
-    return db
+    return chosen_dbs
 
 # Cleaner print outs for the sake of my sanity.
 def print_db(db):
@@ -51,134 +57,133 @@ pm = path_manager()
 
 # Loads in a list of database folders
 # for the user to select as the current database.
-# selected_db = select_db(pm.find_folders(pm.get_databases_dir()))
+selected_dbs = select_db(pm.find_folders(pm.get_databases_dir()))
 
-# Set of each dataset
-datasets = [
-    ['abalone', 'classification']
-]
+# TODO: change to get dataset type from db
 
-output_file.write('CURRENT DATASET: ' + datasets[0][0] + '\n')
-debug_file.write('CURRENT DATASET: ' + datasets[0][0] + '\n')
-
-output_file.write('DATA TYPE: ' + datasets[0][1] + '\n')
-debug_file.write('DATA TYPE: ' + datasets[0][1] + '\n')
-
-# Sets the selected database folder
-# in the path manager for referencing via full path.
-pm.set_current_selected_folder(datasets[0][0])
-
-# Processes the file path of the database into
-# a pre processed database ready to be used as a learning/training set.
-db = process_data.process_database_file(pm)
-
-# Sanity checks.
-normal_data, irregular_data = process_data.identify_missing_data(db)
-corrected_data = process_data.extrapolate_data(normal_data, irregular_data, db.get_missing_symbol())
-
-# repaired_db is the total database once the missing values have been filled in.
-if len(corrected_data) > 0:
-    repaired_db = normal_data + corrected_data
-else:
-    repaired_db = normal_data
+for database in selected_dbs:
+    # Sets the selected database folder
+    # in the path manager for referencing via full path.
+    pm.set_current_selected_folder(database)
     
-db.set_data(repaired_db)
+    # Processes the file path of the database into
+    # a pre processed database ready to be used as a learning/training set.
+    db = process_data.process_database_file(pm)
 
-# Convert the discrete data to type float.
-db.convert_discrete_to_float()
+    output_file.write('CURRENT DATASET: ' + database + '\n')
+    debug_file.write('CURRENT DATASET: ' + database + '\n')
 
-debug_file.write('\n\nFULL DATASET: \n')
-for row in db.get_data():
-    debug_file.write(str(row) + '\n')
+    output_file.write('DATA TYPE: ' + db.get_dataset_type() + '\n')
+    debug_file.write('DATA TYPE: ' + db.get_dataset_type() + '\n')
 
-# COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
-# process_data.convert(db.get_data())
+    # Sanity checks.
+    normal_data, irregular_data = process_data.identify_missing_data(db)
+    corrected_data = process_data.extrapolate_data(normal_data, irregular_data, db.get_missing_symbol())
 
-# -------------------------------------------------------------
-# k-nearest neighbors
+    # repaired_db is the total database once the missing values have been filled in.
+    if len(corrected_data) > 0:
+        repaired_db = normal_data + corrected_data
+    else:
+        repaired_db = normal_data
+        
+    db.set_data(repaired_db)
 
-# print('\nRUNNING K-NEAREST NEIGHBORS\n')
-# knn_predicted = knn.k_nearest_neighbors(5, \
-#                                     'classification', \
-#                                     db.get_training_data(0, 99), \
-#                                     db.get_data()[107], \
-#                                     db.get_classifier_col(), \
-#                                     db.get_classifier_attr_cols())
+    # Convert the discrete data to type float.
+    db.convert_discrete_to_float()
 
-# print(knn_predicted)
+    # TODO: make it append the database name to the debug file aswell, so we can get every dataset when running for all of them.
+    debug_file.write('\n\nFULL DATASET: \n')
+    for row in db.get_data():
+        debug_file.write(str(row) + '\n')
 
-# -------------------------------------------------------------
-# editied k-nearest neighbors
+    # COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
+    # process_data.convert(db.get_data())
 
-# print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
-# eknn_predicted = knn.edited_knn(5, \
-#                'classification', \
-#                db.get_training_data(0, 100), \
-#                db.get_classifier_col(), \
-#                db.get_classifier_attr_cols())
+    # -------------------------------------------------------------
+    # k-nearest neighbors
 
-# print(eknn_predicted)
+    # print('\nRUNNING K-NEAREST NEIGHBORS\n')
+    # knn_predicted = knn.k_nearest_neighbors(5, \
+    #                                     'classification', \
+    #                                     db.get_training_data(0, 99), \
+    #                                     db.get_data()[107], \
+    #                                     db.get_classifier_col(), \
+    #                                     db.get_classifier_attr_cols())
 
-# -------------------------------------------------------------
-# Condensed nearest neighbors
+    # print(knn_predicted)
 
-# print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
-# cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
-#                                  db.get_classifier_col(), \
-#                                  db.get_classifier_attr_cols())
+    # -------------------------------------------------------------
+    # editied k-nearest neighbors
 
-# print(cnn_predicted)
+    # print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
+    # eknn_predicted = knn.edited_knn(5, \
+    #                'classification', \
+    #                db.get_training_data(0, 100), \
+    #                db.get_classifier_col(), \
+    #                db.get_classifier_attr_cols())
 
-# -------------------------------------------------------------
-# k-means clustering and k-medoids clustering
+    # print(eknn_predicted)
 
-print('\nRUNNING K-MEANS CLUSTERING')
-kc = kcluster(5, 10, db.get_data())
+    # -------------------------------------------------------------
+    # Condensed nearest neighbors
 
-print('\nk_means.get_centroids()')
-print(kc.get_centroids())
+    # print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
+    # cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
+    #                                  db.get_classifier_col(), \
+    #                                  db.get_classifier_attr_cols())
 
-for idx, cluster in enumerate(kc.get_kmeans_clusters()):
-    print('\nk_means.get_clusters()[' + str(idx) + ']')
-    print(cluster)
+    # print(cnn_predicted)
 
-print('\nk_means.get_medoids()')
-print(kc.get_medoids())
+    # -------------------------------------------------------------
+    # k-means clustering and k-medoids clustering
 
-for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
-    print('\nk_medoids.get_clusters()[' + str(idx) + ']')
-    print(cluster)
+    print('\nRUNNING K-MEANS CLUSTERING')
+    kc = kcluster(5, 10, db.get_data())
 
-# -------------------------------------------------------------
-# k-fold cross validation
+    print('\nk_means.get_centroids()')
+    print(kc.get_centroids())
 
-# trainSet = [[2,2,2],[4,4,4]]
-# testInstance = [5,5,5]
-# k = 1
+    for idx, cluster in enumerate(kc.get_kmeans_clusters()):
+        print('\nk_means.get_clusters()[' + str(idx) + ']')
+        print(cluster)
 
-# print_db(db.get_data())
-# print("RUNNING K-FOLD CROSS VALIDATION")
+    print('\nk_means.get_medoids()')
+    print(kc.get_medoids())
 
-# Prepare data for k-fold
-binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
-# Extract validation set
-bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
+    for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
+        print('\nk_medoids.get_clusters()[' + str(idx) + ']')
+        print(cluster)
 
-debug_file.write('\n\nVALIDATION DATA: \n')
-for row in validate_data:
-    debug_file.write(str(row) + '\n')
+    # -------------------------------------------------------------
+    # k-fold cross validation
+
+    # trainSet = [[2,2,2],[4,4,4]]
+    # testInstance = [5,5,5]
+    # k = 1
+
+    # print_db(db.get_data())
+    # print("RUNNING K-FOLD CROSS VALIDATION")
+
+    # Prepare data for k-fold
+    binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
+    # Extract validation set
+    bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
+
+    debug_file.write('\n\nVALIDATION DATA: \n')
+    for row in validate_data:
+        debug_file.write(str(row) + '\n')
 
 
-knn = knn(5, datasets[0][1], db.get_classifier_col(), db.get_classifier_attr_cols())
+    knn = knn(5, db.get_dataset_type(), db.get_classifier_col(), db.get_classifier_attr_cols())
 
-#NOTE binned_data needs to still be shuffled somewhere above here
-#NOTE this bitch will probs have to use 9 instead of 10 because we are removing a bin from bin_lengths
-validate.k_fold(9, binned_data, \
-                validate_data, bin_lengths, db, \
-                False, datasets[0][1], \
-                knn, debug_file, output_file, 'edited_nn')
+    #NOTE binned_data needs to still be shuffled somewhere above here
+    #NOTE this bitch will probs have to use 9 instead of 10 because we are removing a bin from bin_lengths
+    validate.k_fold(9, binned_data, \
+                    validate_data, bin_lengths, db, \
+                    False, db.get_dataset_type(), \
+                    knn, debug_file, output_file, 'edited_nn')
 
 
-# print(knn.k_nearest_neighbors(trainSet, testInstance))
+    # print(knn.k_nearest_neighbors(trainSet, testInstance))
 
-# print(knn.get_k_nearest_neighbors(trainSet, testInstance, 1))
+    # print(knn.get_k_nearest_neighbors(trainSet, testInstance, 1))
