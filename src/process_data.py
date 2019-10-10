@@ -40,6 +40,8 @@ def process_database_file(path_manager):
     
     attributes, classifier_column, classifier_attr_cols, missing_symbol = read_attributes(path_manager.get_current_selected_dir(), data_filename)
 
+    db_data = convert(db_data)
+
     return db(db_data, attributes, classifier_column, classifier_attr_cols, missing_symbol)
 
 # Reads in the attribute file from a database, and returns the attributes as a list
@@ -78,21 +80,28 @@ def convert(database):
     if len(database) > 0:
         attribute_count = len(database[0])
         for attribute_col in range(0, attribute_count):
-            if needs_conversion(database, attribute_col):
-                # TODO: return if needed
-                database = equal_width_conversion(database, attribute_col)
-                
+            if discrete_col_check(database, attribute_col):
+                # Converts the attribute_col to a set of float values so they aren't strings. Thereby marking them as discrete.
+                database = col_to_float(database, attribute_col)
 
-# Returns a boolean value representative of whether or not the column of values needs to be converted from quantitative to catagorial.
-def needs_conversion(database, attribute_col):
+# Returns true if the column is discreate
+def discrete_col_check(database, attribute_col):
     for data_row in database:
-        # See if the value for each row of the column specified is a float/int
         try:
+            # Checks that the value for this row at position attribute_col is discrete
             float(data_row[attribute_col])
         except ValueError:
+            # There was a non-discrete data type entered.
             return False
     return True
 
+# Converts a column of strings into float format
+def col_to_float(database, attribute_col):
+    for data_row in database:
+        data_row[attribute_col] = float(data_row[attribute_col])
+    print(database)
+    return database
+        
 # Converts a column of quantitative data to catagorical values.
 def equal_width_conversion(database, attribute_col):
     
