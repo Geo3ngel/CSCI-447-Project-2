@@ -153,13 +153,10 @@ knn = knn(5, 'classification', db.get_classifier_col(), db.get_classifier_attr_c
 shuffled_data = process_data.shuffle_all(db.get_data(), 1)
 training_data = shuffled_data[0:bin_lengths[0]]
 
-for row in shuffled_data:
-    print(row)
-
 print("FULL TRAINING DATA SIZE: ", len(training_data))
-# training_data = knn.condensed_nn(training_data)
-validation_data = validate.get_validation_data(db, bin_lengths[0])
-training_data = knn.edited_knn(training_data, validation_data)
+training_data = knn.condensed_nn(training_data)
+# validation_data = validate.get_validation_data(db, bin_lengths[0])
+# training_data = knn.edited_knn(training_data, validation_data)
 print("CONDENSED TRAINING DATA SIZE: ", len(training_data))
 
 

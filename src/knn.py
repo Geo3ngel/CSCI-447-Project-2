@@ -42,7 +42,11 @@ class knn:
     def euclidean_distance(self, data_instance_a, data_instance_b):
         distance = 0
         for x in range(len(data_instance_a)):
-            distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
+            if type(data_instance_a[x]) == str:
+                if data_instance_a[x] == data_instance_b[x]:
+                    distance += 1
+            else:
+                distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
         return math.sqrt(distance)
     
     # Computes euclidean distance using only the classifier cols
@@ -187,22 +191,19 @@ class knn:
         training_data[rand_idx].append('R')
         past_length = -1
         current_length = 0
-        print("Z:",z)
-        while past_length < current_length:
+        loop_count = 0
+        while past_length < current_length or loop_count <= 10:
             for x in training_data:
                 if (x[-1] == 'R'): # Skip if point has been tagged for removal
                     continue
-                print("X:   ", x)
                 x_prime = self.find_nearest(x, z)
-                print("X PRIME: ", x_prime)
                 if x_prime[self.class_idx] != x[self.class_idx]:
-                    print("APPENDING X")
                     z.append(x)
                     # Tag x for removal
                     x.append('R')
-                print('----------------------------------')
             past_length = current_length
             current_length = len(z)
+            loop_count += 1
             print('PAST LENGTH: ', past_length)
             print('CURRENT LENGTH: ', current_length)
         return z
