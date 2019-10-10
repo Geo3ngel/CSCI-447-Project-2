@@ -69,12 +69,28 @@
 \section{Introduction}
 TODO: Add in as: What it is we are using, and how we are using it
 
+The purpose of this project is to implement five different instance-based learning algorithms: k-nearest neighbors, edited nearest neighbors, condensed nearest neighbors, k-means clustering, and k-medoids clustering. To apply these functions, we perform classification and regression on six data sets via 10-fold cross-validation. These six data sets include Abalone, Car Evaluation, Image Segmentation, Computer Hardware, Forest Fires, and Wine Quality, found on the UCI Machine Learning Repository.
+
 \section{Problem Statement}
 TODO: State what we want to do/how we plan to do it
+
+In this project we are attempting to answer the question, "Does a reduction in the data set, by way of clustering or filtering in the data itself, improve the accuracy of our learning algorithms?" To answer this question, there are several other problems we must tackle beforehand. The first of these problems is to decide how we must pre-process the data. We pre-process our data sets to rid ourselves of the burdens of man-made input errors and any missing attribute values.
+
+To pre-process the data we must TODO: fill this out.
+
+Next, we have to utilize our five instance-based learning algorithms for to create respective models of classification and regression. We can then use these models to make predictions about the data set for any newly introduced data.
+
+To determine the accuracy of our learning models, we use 10-fold cross-validation. This allows us to verify the validity/accuracy of our models over the entire data set and multiple tests. Next, we use loss functions to get a quantitative value for the accuracy of our models.
+
+TODO: finish this loss functions section. Next, we draw conclusions on the accuracy of the reduced data set models in relation to the non-reduced data set models.
 
 \section{Hypotheses}
 
 TODO: Add a general hypothesis, and then go into detail for each dataset.
+
+In the data sets that we are attempting to classify, Abalone, Car Evaluation, and Image Segmentation, we hypothesize that the algorithms that condense the data set will produce a more accurate model for prediction than the algorithm that does not condense the data. That is to say that the k-nearest neighbors algorithm will produce a less accurate model than the condense nearest neighbor and the edited nearest neighbor algorithm.
+
+As for the data sets that we are attempting to perform regression against --- Computer Hardware, Forest Fires, and Wine Quality --- we hypothesize that k-medoids clustering will be creating a better learning model than k-means clustering given that k-medoids clustering is more robust to outliers than k-means clustering (TODO: site a source for how we know k-medoids clustering is more robust to outliers). (TODO: make this better lmao)
 
 \subsection{Abalone}
 
@@ -86,8 +102,10 @@ TODO: Add a general hypothesis, and then go into detail for each dataset.
 
 \subsection{segmentation}
 
-\section{The Algorithm}
+\section{The Algorithms}
 TODO: Add description of the algorithm used, proper credits to an academic article cited in line, and how we went implemented this algorithm.
+
+
 
 \section{Our Approach}
 \subsection{Handling missing data} NOTICE: SUBJECT TO CHANGE.
