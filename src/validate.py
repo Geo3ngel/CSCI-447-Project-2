@@ -123,9 +123,9 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                 edited_data = knn.edited_knn(training_data, validate_data)
                 print("Finished enn.")
                 print("Making ", len(edited_data), " clusters.")
-                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols())
+                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-means')
             else:
-                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols())
+                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols(), 'k-means')
             training_data = kc.get_centroids()
 
         elif reduction_func == 'k_medoids':
@@ -133,9 +133,9 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                 edited_data = knn.edited_knn(training_data, validate_data)
                 print("Finished enn.")
                 print("Making ", len(edited_data), " clusters.")
-                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols())
+                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
             else:
-                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols())
+                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
             medoid_idxs = kc.get_medoids()
             new_training_data = []
             for idx in medoid_idxs:
