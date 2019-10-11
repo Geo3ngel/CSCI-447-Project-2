@@ -66,7 +66,6 @@ class knn:
         return Counter(classes).most_common(1)[0][0]
 
     # Auxiliary function to get mean class for regression
-    # TODO: Implement regression function from lecture(?)
     def get_avg_class(self, neighbors):
         classes = [float(el[0]) for el in neighbors]
         return sum(classes) / len(classes)
@@ -127,11 +126,6 @@ class knn:
         return neighbors
     
     def k_nearest_neighbors(self, training_data, test_point):
-        # print("TRAINING DATA:")
-        # for row in training_data:
-        #     print(row)
-        # print('------------------------------')
-
         distances = []
         for point in training_data:
             if len(point) == 0:
@@ -165,14 +159,8 @@ class knn:
             for point in edited_data:
                 correct_class = point[self.class_idx]
                 predicted_class = self.k_nearest_neighbors(edited_data, point)
-                # print('CORRECT CLASS: ', correct_class)
-                # print("PREDICTED CLASS: ", predicted_class)
                 if predicted_class != correct_class:
-                    # print('REMOVING POINT')
                     edited_data.remove(point)
-                # print('------------------------------------')
-            # END FOR LOOP
-            #Check performance at end of each scan
             past_performance = current_performance
             current_performance = self.get_performance(edited_data, validation_data)
             print("PAST PERFORMANCE:    ", past_performance)
@@ -208,8 +196,6 @@ class knn:
             past_length = current_length
             current_length = len(z)
             loop_count += 1
-            # print('PAST LENGTH: ', past_length)
-            # print('CURRENT LENGTH: ', current_length)
         for row in z:
             row.remove(row[-1])
         return z
