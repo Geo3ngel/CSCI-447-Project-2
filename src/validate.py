@@ -132,7 +132,6 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
             for i,point in enumerate(training_data):
                 if len(point) == 0:
                     del training_data[i]
-            print(training_data)
 
         elif reduction_func == 'k_medoids':
             if type == 'classification':
