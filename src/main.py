@@ -11,7 +11,6 @@ from kcluster import kcluster
 from path_manager import pathManager as path_manager
 import validate
 import statistics
-from copy import deepcopy
 
 debug_file = open("debug_output.txt", "w")
 output_file = open("output_file.txt", "w+")
@@ -128,7 +127,7 @@ def main_execution():
         # Run k-fold on just k-means first
         k_fold_results = validate.k_fold(9, binned_data, \
                                         validate_data, bin_lengths, \
-                                        db, False, db.get_dataset_type(), \
+                                        db, True, db.get_dataset_type(), \
                                         k_nearest, debug_file, output_file,)
         
         if db.get_dataset_type() == 'classification':
@@ -138,107 +137,61 @@ def main_execution():
 
         output_file.write('\n\n\n')
         
-        # Tuning
-        if True:
+        # Loop thru all reduction functions
+        for func in reduction_funcs:
+            print('RUNNING ', func)
+            #NOTE this bitch will probs have to use 9 instead of 10 because 
+            # we are removing a bin from bin_lengths
             
-            # Attributes to be removed
-            removal_queue = []
+            if db.get_dataset_type() == 'classification':
+                k_fold_results = validate.k_fold(9, binned_data, \
+                                                validate_data, bin_lengths, db, \
+                                                True, db.get_dataset_type(), \
+                                                k_nearest, debug_file, output_file, func)
             
-            removed_attr_idx = None
+                if func == 'edited_nn':
+                    enn_avgs.append(sum(k_fold_results) / len(k_fold_results))
+                elif func == 'condensed_nn':
+                    cnn_avgs.append(sum(k_fold_results) / len(k_fold_results))
+                elif func == 'k_means':
+                    k_means_classification_avgs.append(sum(k_fold_results) / len(k_fold_results))
+                elif func == 'k_medoids':
+                    k_medoid_classification_avgs.append(sum(k_fold_results) / len(k_fold_results))
             
-            for attr_idx in db.get_classifier_attr_cols():
-                norm_sum = sum(k_fold_results) / len(k_fold_results)
+            elif db.get_dataset_type() == 'regression':
+                if func == 'edited_nn' or func == 'condensed_nn':
+                    continue
                 
-                # Stores full classifier attributes list.
-                temp_db = deepcopy(db.get_classifier_attr_cols())[:]
-                
-                # Sets databae classifier attributes idx list to shorter version temporarily.
-                tmp = db.get_classifier_attr_cols()
-                tmp.remove(attr_idx)
-                db.set_classifier_attr_cols(tmp)
-                print(attr_idx)
-                
-                # recomputes the k fold results for comparison
-                attr_removed_sum  = sum(k_fold_results) / len(k_fold_results)
-                
-                # Resets the database column set.
-                print(db.get_classifier_attr_cols())
-                db.set_classifier_attr_cols(temp_db)
-                
-                # Remove attr_idx from the removal queue if the accuracy is worse.
-                print("COMPARISON FOR:", attr_idx, ", VALUES:", norm_sum, ">", attr_removed_sum)
-                print(db.get_classifier_attr_cols())
-                if norm_sum > attr_removed_sum:
-                    # Add to removal queue.
-                    removal_queue.append(attr_idx)
-            
-            final_attrs = db.get_classifier_attr_cols()
-            
-            print("ATTRINBUTE IDX:", removal_queue)
-            
-            # Removes the attribute idx values from the database's list of attribute columns to be used.
-            for attr_idx in removal_queue:
-                final_attrs.remove(attr_idx)
-                
-            db.set_classifier_attr_cols(final_attrs)
-                
-            print(database, " is using attribute colums: ", db.get_classifier_attr_cols())
-        
-        # # Loop thru all reduction functions
-        # for func in reduction_funcs:
-        #     print('RUNNING ', func)
-        #     #NOTE this bitch will probs have to use 9 instead of 10 because 
-        #     # we are removing a bin from bin_lengths
-            
-        #     if db.get_dataset_type() == 'classification':
-        #         k_fold_results = validate.k_fold(9, binned_data, \
-        #                                         validate_data, bin_lengths, db, \
-        #                                         True, db.get_dataset_type(), \
-        #                                         k_nearest, debug_file, output_file, func)
-            
-        #         if func == 'edited_nn':
-        #             enn_avgs.append(sum(k_fold_results) / len(k_fold_results))
-        #         elif func == 'condensed_nn':
-        #             cnn_avgs.append(sum(k_fold_results) / len(k_fold_results))
-        #         elif func == 'k_means':
-        #             k_means_classification_avgs.append(sum(k_fold_results) / len(k_fold_results))
-        #         elif func == 'k_medoids':
-        #             k_medoid_classification_avgs.append(sum(k_fold_results) / len(k_fold_results))
-            
-        #     elif db.get_dataset_type() == 'regression':
-        #         if func == 'edited_nn' or func == 'condensed_nn':
-        #             continue
-                
-        #         # Shrink data to quarter of the size
-        #         db_small = process_data.random_data_from(db.get_data(), 0.25)
-        #         # Re-bin it after shrinking
-        #         binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db_small) 
+                # Shrink data to quarter of the size
+                db_small = process_data.random_data_from(db.get_data(), 0.25)
+                # Re-bin it after shrinking
+                binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db_small) 
 
-        #         k_fold_results = validate.k_fold(9, binned_data, \
-        #                                         validate_data, bin_lengths, db, \
-        #                                         True, db.get_dataset_type(), \
-        #                                         k_nearest, debug_file, output_file, func)
+                k_fold_results = validate.k_fold(9, binned_data, \
+                                                validate_data, bin_lengths, db, \
+                                                True, db.get_dataset_type(), \
+                                                k_nearest, debug_file, output_file, func)
                 
-        #         if func == 'k_means':
-        #             pass
-        #         elif func == 'k_medoids':
-        #             pass
+                if func == 'k_means':
+                    pass
+                elif func == 'k_medoids':
+                    pass
                 
             
-        #     output_file.write('K FOLD RESULTS: ' + str(k_fold_results))
+            output_file.write('K FOLD RESULTS: ' + str(k_fold_results))
             
-        #     output_file.write('\n\n\n')
+            output_file.write('\n\n\n')
             
-        # print("KNN CLASSIFICATION AVGS: ", k_nn_classification_avgs)
-        # # output_file.write("KNN CLASSIFICATION AVGS: " + k_nn_classification_avgs)
-        # # debug_file.write("KNN CLASSIFICATION AVGS: " + k_nn_classification_avgs)
-        # print("KNN REGRESSION AVGS: ", k_nn_regress_avgs)
-        # print("ENN AVGS: ", enn_avgs)
-        # print("CNN AVGS: ", cnn_avgs)
-        # print("K MEANS CLASSIFICATION AVGS: ", k_means_classification_avgs)
-        # print("K MEANS REGRESSION AVGS: ", k_means_regress_avgs)
-        # print("K MEDOID CLASSIFICATION AVGS: ", k_medoid_classification_avgs)
-        # print("K MEDOID REGRESSION AVGS", k_medoid_regress_avgs)
+        print("KNN CLASSIFICATION AVGS: ", k_nn_classification_avgs)
+        # output_file.write("KNN CLASSIFICATION AVGS: " + k_nn_classification_avgs)
+        # debug_file.write("KNN CLASSIFICATION AVGS: " + k_nn_classification_avgs)
+        print("KNN REGRESSION AVGS: ", k_nn_regress_avgs)
+        print("ENN AVGS: ", enn_avgs)
+        print("CNN AVGS: ", cnn_avgs)
+        print("K MEANS CLASSIFICATION AVGS: ", k_means_classification_avgs)
+        print("K MEANS REGRESSION AVGS: ", k_means_regress_avgs)
+        print("K MEDOID CLASSIFICATION AVGS: ", k_medoid_classification_avgs)
+        print("K MEDOID REGRESSION AVGS", k_medoid_regress_avgs)
     
 
 
