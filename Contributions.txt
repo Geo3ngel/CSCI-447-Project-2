@@ -8,6 +8,7 @@ b) Specific areas of Responsibilities:
     -k-clustering
     -contributed to various sections of the paper (he did a lot -George)
     -much debugging
+    -video drafting
 
 George Engel:
 a) General Code %: (TBD once assignment is finished)
@@ -23,13 +24,20 @@ b) Specific areas of Responsibilities:
     -lots of debugging
     -Paper portions for tuning, preprocessing subsections,& part of the problem statement/Introduction.
     -Helped debug/build the algorithms (specifically for knn)
+    -video premise
 
 Henry Soule:
 a) General Code %: (TBD once assignment is finished)
 
 b) Specific areas of Responsibilities:
+    -stuff and things
+    -knn class outline
+    -validate.py
+    -enn
+    -some other algorithm he should fill in.
 
 Troy Oster:
 a) General Code %: (TBD once assignment is finished)
 
 b) Specific areas of Responsibilities:
+    -Video Voice (Smooth and ill)
