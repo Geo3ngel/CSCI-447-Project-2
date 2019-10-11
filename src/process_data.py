@@ -175,6 +175,36 @@ def shuffle_all(training_data, percent):
             shuffle_data(return_data, percent, attribute_count)
             attribute_count += 1
     return return_data
+
+# Returns a percentage of the dataset that is determined at random
+def random_data_from(dataset, percent):
+    random_dataset = []
+
+    if(percent <= 100):
+        num_to_shuffle = int(len(dataset) * percent)
+        
+        # Will need to pull X% of the rows out of the database at random
+        for iter in range(0, num_to_shuffle):
+            data_row = random.choice(dataset)
+            dataset.remove(data_row)
+            
+            # Adds the row data to random dataset.
+            random_dataset.append(data_row)
+  
+# Shuffles X% of the data for an attribute specified by row of dataset.
+def shuffle_data(training_data, percent, attribute):
+    shuffling = []
+
+    if(percent <= 100):
+        num_to_shuffle = int(len(training_data) * percent)
+        
+        # Will need to pull X% of the rows out of the database at random
+        for iter in range(0, num_to_shuffle):
+            data_row = random.choice(training_data)
+            training_data.remove(data_row)
+            
+            # Adds the row data to be shuffled.
+            shuffling.append(data_row)
     
 # Shuffles X% of the data for an attribute specified by row of dataset.
 def shuffle_data(training_data, percent, attribute):
