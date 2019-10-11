@@ -95,8 +95,8 @@ def main_execution():
     k_medoid_regress_avgs = []
     
     reduction_funcs = [
-        # 'edited_nn',
-        # 'condensed_nn',
+        'edited_nn',
+        'condensed_nn',
         'k_means',
         'k_medoids'
     ]
@@ -127,7 +127,7 @@ def main_execution():
         # Run k-fold on just k-means first
         k_fold_results = validate.k_fold(9, binned_data, \
                                         validate_data, bin_lengths, \
-                                        db, True, db.get_dataset_type(), \
+                                        db, False, db.get_dataset_type(), \
                                         k_nearest, debug_file, output_file,)
         
         if db.get_dataset_type() == 'classification':

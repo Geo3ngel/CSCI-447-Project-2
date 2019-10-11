@@ -70,7 +70,7 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
         debug_file.write('RUNNING WITH ' + reduction_func + '\n')
         output_file.write('RUNNING WITH ' + reduction_func + '\n')
 
-    mae_results = []
+    mse_results = []
     # List to store 0-1 loss results from all k iterations or any classification dataset
     loss_results = [] 
     attr_headers = db.get_attr()
@@ -125,7 +125,8 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                 print("Making ", len(edited_data), " clusters.")
                 kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-means')
             else:
-                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols(), 'k-means')
+                num_clusters = math.sqrt(len(training_data))
+                kc = kcluster(num_clusters, 100, training_data, db.get_classifier_attr_cols(), 'k-means')
             training_data = kc.get_centroids()
 
         elif reduction_func == 'k_medoids':
@@ -135,7 +136,8 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                 print("Making ", len(edited_data), " clusters.")
                 kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
             else:
-                kc = kcluster(10, 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
+                num_clusters = math.sqrt(len(training_data))
+                kc = kcluster(num_clusters, 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
             medoid_idxs = kc.get_medoids()
             new_training_data = []
             for idx in medoid_idxs:
@@ -147,7 +149,7 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
         print('CONDENSED TRAINING DATA LENGTH: ', len(training_data))
         
         current_loss_results = [] # Set of each 0-1 loss result
-        abs_errors = [] # Set of absolute errors of each regression prediction
+        squared_errors = [] # Set of absolute errors of each regression prediction
         
         debug_file.write('\n\nTEST DATA: \n')
         for row in test_data:
@@ -165,7 +167,7 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                     current_loss_results.append(1)
 
             elif type == 'regression':
-                abs_errors.append(abs(float(test_row[0][db.get_classifier_col()]) - predicted))
+                squared_errors.append(pow((float(test_row[0][db.get_classifier_col()]) - predicted), 2))
         
         # Compute average 0-1 loss and mean absolute error for this iteration
         if type == 'classification':
@@ -174,16 +176,16 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
             debug_file.write('CALCULATED LOSS: ' + str(loss) + '\n')
             loss_results.append(loss)
         elif type == 'regression':
-            mae = sum(abs_errors) / len(abs_errors)
-            output_file.write('CALCULATED MAE: ' + str(mae) + '\n')
-            output_file.write('CALCULATED MAE: ' + str(mae) + '\n')
-            mae_results.append(mae)
+            mse = sum(squared_errors) / len(squared_errors)
+            output_file.write('CALCULATED MsE: ' + str(mse) + '\n')
+            output_file.write('CALCULATED MsE: ' + str(mse) + '\n')
+            mse_results.append(mse)
     
     print("0-1 LOSS RESULTS: ", loss_results)
-    print("MAE RESULTS: ", mae_results)
+    print("MsE RESULTS: ", mse_results)
     # Return the correct loss function results
     if type == 'classification':
         return loss_results
     else:
-        return mae_results
+        return mse_results
         
