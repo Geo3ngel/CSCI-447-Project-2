@@ -49,13 +49,6 @@ class knn:
                 distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
         return math.sqrt(distance)
     
-    # Computes euclidean distance using only the classifier cols
-    def euc_distance(self, point_a, point_b):
-        distance = 0
-        for x in self.class_cols:
-            distance += pow((float(point_a[x]) - float(point_b[x])), 2)
-        return math.sqrt(distance)
-    
     # Auxiliary function for sorting
     def take_second(self, el):
         return el[1]
@@ -83,7 +76,7 @@ class knn:
         for point in z:
             # if point[self.class_idx] == x[self.class_idx]:
             #     continue
-            dist = self.euc_distance(x, point)
+            dist = self.euclidean_distance(x, point)
             if dist < min_dist:
                 min_dist = dist
                 min_point = point
@@ -135,7 +128,7 @@ class knn:
 
         distances = []
         for point in training_data:
-            distances.append((point[self.class_idx], self.euc_distance(point, test_point)))
+            distances.append((point[self.class_idx], self.euclidean_distance(point, test_point)))
         distances = sorted(distances, key=self.take_second)
         neighbors = distances[0:self.k]
         if self.type == 'classification':
