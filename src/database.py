@@ -24,7 +24,7 @@ class database:
         
     def convert_discrete_to_float(self):
         self.data = process_data.convert(self.data)
-        print("SELF DATA:", self.data)
+        # print("SELF DATA:", self.data)
         
     def to_string(self):
         if len(self.data) < 1:
