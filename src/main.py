@@ -52,34 +52,21 @@ def print_db(db):
         for row in db:
             print(row)
 
-# Initializes path manager with default directory as databases.
-pm = path_manager()
-
-# Loads in a list of database folders
-# for the user to select as the current database.
-selected_dbs = select_db(pm.find_folders(pm.get_databases_dir()))
-
-# TODO: change to get dataset type from db
-
-for database in selected_dbs:
+def prepare_db(database, pm):
     # Sets the selected database folder
     # in the path manager for referencing via full path.
     pm.set_current_selected_folder(database)
-    
     # Processes the file path of the database into
     # a pre processed database ready to be used as a learning/training set.
     db = process_data.process_database_file(pm)
 
     output_file.write('CURRENT DATASET: ' + database + '\n')
     debug_file.write('CURRENT DATASET: ' + database + '\n')
-
     output_file.write('DATA TYPE: ' + db.get_dataset_type() + '\n')
     debug_file.write('DATA TYPE: ' + db.get_dataset_type() + '\n')
-
     # Sanity checks.
     normal_data, irregular_data = process_data.identify_missing_data(db)
     corrected_data = process_data.extrapolate_data(normal_data, irregular_data, db.get_missing_symbol())
-
     # repaired_db is the total database once the missing values have been filled in.
     if len(corrected_data) > 0:
         repaired_db = normal_data + corrected_data
@@ -87,72 +74,100 @@ for database in selected_dbs:
         repaired_db = normal_data
         
     db.set_data(repaired_db)
-
     # Convert the discrete data to type float.
     db.convert_discrete_to_float()
-
     # TODO: make it append the database name to the debug file aswell, so we can get every dataset when running for all of them.
     debug_file.write('\n\nFULL DATASET: \n')
     for row in db.get_data():
         debug_file.write(str(row) + '\n')
+    
+    return db
 
-    # COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
-    # process_data.convert(db.get_data())
+def main_execution():
+    k_nn_classification_avgs = []
+    k_nn_regress_avgs = []
+    enn_avgs = []
+    cnn_avgs = []
+    k_means_classification_avgs = []
+    k_means_regress_avgs = []
+    k_medoid_classification_avgs = []
+    k_medoid_regress_avgs = []
+    
+    # Initializes path manager with default directory as databases.
+    pm = path_manager()
 
-    # -------------------------------------------------------------
-    # k-nearest neighbors
+    # Loads in a list of database folders
+    # for the user to select as the current database.
+    selected_dbs = select_db(pm.find_folders(pm.get_databases_dir()))
+    # TODO: change to get dataset type from db
 
-    # print('\nRUNNING K-NEAREST NEIGHBORS\n')
-    # knn_predicted = knn.k_nearest_neighbors(5, \
-    #                                     'classification', \
-    #                                     db.get_training_data(0, 99), \
-    #                                     db.get_data()[107], \
-    #                                     db.get_classifier_col(), \
-    #                                     db.get_classifier_attr_cols())
+    for database in selected_dbs:
+        db = prepare_db(database, pm)
 
-    # print(knn_predicted)
 
-    # -------------------------------------------------------------
-    # editied k-nearest neighbors
+main_execution()
+        
 
-    # print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
-    # eknn_predicted = knn.edited_knn(5, \
-    #                'classification', \
-    #                db.get_training_data(0, 100), \
-    #                db.get_classifier_col(), \
-    #                db.get_classifier_attr_cols())
+        
 
-    # print(eknn_predicted)
 
-    # -------------------------------------------------------------
-    # Condensed nearest neighbors
+# COMMENTING THIS OUT AS WE DON'T WANT DISCRETIZED DATA AT THIS POINT IN TIME
+# process_data.convert(db.get_data())
 
-    # print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
-    # cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
-    #                                  db.get_classifier_col(), \
-    #                                  db.get_classifier_attr_cols())
+# -------------------------------------------------------------
+# k-nearest neighbors
 
-    # print(cnn_predicted)
+# print('\nRUNNING K-NEAREST NEIGHBORS\n')
+# knn_predicted = knn.k_nearest_neighbors(5, \
+#                                     'classification', \
+#                                     db.get_training_data(0, 99), \
+#                                     db.get_data()[107], \
+#                                     db.get_classifier_col(), \
+#                                     db.get_classifier_attr_cols())
 
-    # -------------------------------------------------------------
-    # k-means clustering and k-medoids clustering
+# print(knn_predicted)
 
-    print('\nRUNNING K-MEANS CLUSTERING')
-    kc = kcluster(5, 10, db.get_data())
+# -------------------------------------------------------------
+# editied k-nearest neighbors
 
-    print('\nk_means.get_centroids()')
-    print(kc.get_centroids())
+# print('\nRUNNING EDITED K-NEAREST NEIGHBORS\n')
+# eknn_predicted = knn.edited_knn(5, \
+#                'classification', \
+#                db.get_training_data(0, 100), \
+#                db.get_classifier_col(), \
+#                db.get_classifier_attr_cols())
 
-    for idx, cluster in enumerate(kc.get_kmeans_clusters()):
-        print('\nk_means.get_clusters()[' + str(idx) + ']')
-        print(cluster)
+# print(eknn_predicted)
 
-    print('\nk_means.get_medoids()')
-    print(kc.get_medoids())
+# -------------------------------------------------------------
+# Condensed nearest neighbors
 
-    for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
-        print('\nk_medoids.get_clusters()[' + str(idx) + ']')
-        print(cluster)
+# print('\nRUNNING CONDENSED NEAREST NEIGHBORS\n')
+# cnn_predicted = knn.condensed_nn(db.get_training_data(0,100), \
+#                                  db.get_classifier_col(), \
+#                                  db.get_classifier_attr_cols())
+
+# print(cnn_predicted)
+
+# -------------------------------------------------------------
+# k-means clustering and k-medoids clustering
+
+    # print('\nRUNNING K-MEANS CLUSTERING')
+    # kc = kcluster(5, 10, db.get_data())
+
+    # print('\nk_means.get_centroids()')
+    # print(kc.get_centroids())
+
+    # for idx, cluster in enumerate(kc.get_kmeans_clusters()):
+    #     print('\nk_means.get_clusters()[' + str(idx) + ']')
+    #     print(cluster)
+
+    # print('\nk_means.get_medoids()')
+    # print(kc.get_medoids())
+
+    # for idx, cluster in enumerate(kc.get_kmedoids_clusters()):
+    #     print('\nk_medoids.get_clusters()[' + str(idx) + ']')
+    #     print(cluster)
 
     # -------------------------------------------------------------
     # k-fold cross validation
@@ -165,23 +180,23 @@ for database in selected_dbs:
     # print("RUNNING K-FOLD CROSS VALIDATION")
 
     # Prepare data for k-fold
-    binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
+    # binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
     # Extract validation set
-    bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
+    # bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
 
-    debug_file.write('\n\nVALIDATION DATA: \n')
-    for row in validate_data:
-        debug_file.write(str(row) + '\n')
+    # debug_file.write('\n\nVALIDATION DATA: \n')
+    # for row in validate_data:
+    #     debug_file.write(str(row) + '\n')
 
 
-    knn = knn(5, db.get_dataset_type(), db.get_classifier_col(), db.get_classifier_attr_cols())
+    # knn = knn(5, db.get_dataset_type(), db.get_classifier_col(), db.get_classifier_attr_cols())
 
     #NOTE binned_data needs to still be shuffled somewhere above here
     #NOTE this bitch will probs have to use 9 instead of 10 because we are removing a bin from bin_lengths
-    validate.k_fold(9, binned_data, \
-                    validate_data, bin_lengths, db, \
-                    False, db.get_dataset_type(), \
-                    knn, debug_file, output_file, 'edited_nn')
+    # validate.k_fold(9, binned_data, \
+    #                 validate_data, bin_lengths, db, \
+    #                 False, db.get_dataset_type(), \
+    #                 knn, debug_file, output_file, 'edited_nn')
 
 
     # print(knn.k_nearest_neighbors(trainSet, testInstance))

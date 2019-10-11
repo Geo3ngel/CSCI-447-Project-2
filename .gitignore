@@ -113,3 +113,7 @@ src/test.py
 src/loss_functions.py
 
 \.vscode/settings\.json
+
+output_files/debug_output.txt
+
+output_files/output_file.txt
