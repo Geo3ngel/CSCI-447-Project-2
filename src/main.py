@@ -95,8 +95,8 @@ def main_execution():
     k_medoid_regress_avgs = []
     
     reduction_funcs = [
-        # 'edited_nn',
-        # 'condensed_nn',
+        'edited_nn',
+        'condensed_nn',
         'k_means',
         'k_medoids'
     ]
