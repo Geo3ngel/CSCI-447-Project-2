@@ -45,6 +45,7 @@ class kcluster:
             self.calc_medoids_and_clusters()
             print("Finished medoids and clusters.")
 
+
     
     """ ---------------------------------------------------
     @param  db   A list of examples (lists) that is our data
@@ -158,12 +159,13 @@ class kcluster:
         
         # The sum of squared distances of examples x and y
         sum = 0
-
+        
         # For each
         # (len(x) and len(y) are completely interchangable)
         for attr_idx in self.class_cols:
-
             # If the current attribute is continuous...
+            if len(x) < attr_idx+1:
+                print("REF POINT: ", x)
             if (type(x[attr_idx]) != str):
                 sum += (x[attr_idx] - y[attr_idx])**2
             
@@ -191,7 +193,7 @@ class kcluster:
     """ ---------------------------------------------------
     TODO: add info
     """
-    def assign_ex(self, ex, using_centroids):
+    def assign_ex(self, ex, using_centroids, skip_empty = False):
         min_dist = sys.maxsize
         min_idx = -1    # -1 being a default value
         ref_points = []
@@ -204,20 +206,19 @@ class kcluster:
 
         # For each centroid...
         for idx in range(len(ref_points)):
-
             # Find the distance from
             # current example to current centroid
-            curr_dist = self.euc_dist(ref_points[idx], ex)
+            if len(ref_points[idx]) > 0:
+                curr_dist = self.euc_dist(ref_points[idx], ex)
+                # If that distance is less than
+                # the current min distance...
+                if (curr_dist < min_dist):
 
-            # If that distance is less than
-            # the current min distance...
-            if (curr_dist < min_dist):
+                    # Set the new minimum distance
+                    min_dist = curr_dist
 
-                # Set the new minimum distance
-                min_dist = curr_dist
-
-                # Set the new minimum distant centroid index
-                min_idx = idx
+                    # Set the new minimum distant centroid index
+                    min_idx = idx
         
         return min_idx
     
@@ -232,25 +233,33 @@ class kcluster:
 
         # Initialize the centroids randomly
         clusters_arent_empty = False
-        while clusters_arent_empty is False:
-            self.init_centroids(attr_mins, attr_maxs, discrete_attrs_vals)
-            clusters = [[] for i in range(len(self.get_centroids()[:]))]
-            for ex_idx, ex in enumerate(self.get_db()[:]):
+        loop_count = 0
+        # while clusters_arent_empty is False:
+        self.init_centroids(attr_mins, attr_maxs, discrete_attrs_vals)
+        print("Inited centroids")
+        # clusters = [[] for i in range(len(self.get_centroids()[:]))]
 
-                # Find which cluster we are in
-                cent_idx = self.assign_ex(ex, True)
-                clusters[cent_idx].append(ex)
+            # for ex_idx, ex in enumerate(self.get_db()[:]):
+            #     # Find which cluster we are in
+            #     cent_idx = self.assign_ex(ex, True)
+            #     clusters[cent_idx].append(ex)
+
+            # clusters_arent_empty = True
+            # for c in clusters:
+            #     if len(c) == 0:
+            #         clusters_arent_empty = False
+            # loop_count += 1
+            # if loop_count > 10:
+            #     self.fix_empty_clusters(clusters)
             
-            clusters_arent_empty = True
-            for c in clusters:
-                if len(c) == 0:
-                    clusters_arent_empty = False
 
         # Holds the number of examples contained in each cluster
         # size_of_clust = [0 for i in range(self.get_k())]
 
         # Calculate the centroids
+        print("Max iters: ", self.get_max_iters())
         for curr_iter in range(self.get_max_iters()):
+            print("Current iter: ", curr_iter)
 
             # Holds which cluster each example belongs to
             ex_to_clust = [-1 for i in range(len(self.get_db()))]
@@ -329,6 +338,7 @@ class kcluster:
             #     break
 
             self.set_centroids(new_centroids)
+        print('Finished Iterations')
 
     """ ---------------------------------------------------
     TODO: add info
@@ -439,6 +449,10 @@ class kcluster:
         for ex in self.get_db()[:]:
             cent_idx = self.assign_ex(ex, True)
             clusters[cent_idx].append(ex)
+        
+        for c in clusters:
+            if len(c) == 0:
+                clusters.remove(c)
 
         self.set_kmeans_clusters(clusters)
 

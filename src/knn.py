@@ -134,6 +134,8 @@ class knn:
 
         distances = []
         for point in training_data:
+            if len(point) == 0:
+                continue
             distances.append((point[self.class_idx], self.euclidean_distance(point, test_point)))
         distances = sorted(distances, key=self.take_second)
         neighbors = distances[0:self.k]

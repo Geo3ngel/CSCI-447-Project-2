@@ -124,18 +124,22 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
                 edited_data = knn.edited_knn(training_data, validate_data)
                 print("Finished enn.")
                 print("Making ", len(edited_data), " clusters.")
-                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-means')
+                kc = kcluster(len(edited_data), 10, training_data, db.get_classifier_attr_cols(), 'k-means')
             else:
                 num_clusters = math.sqrt(len(training_data))
-                kc = kcluster(num_clusters, 100, training_data, db.get_classifier_attr_cols(), 'k-means')
+                kc = kcluster(num_clusters, 10, training_data, db.get_classifier_attr_cols(), 'k-means')
             training_data = kc.get_centroids()
+            for i,point in enumerate(training_data):
+                if len(point) == 0:
+                    del training_data[i]
+            print(training_data)
 
         elif reduction_func == 'k_medoids':
             if type == 'classification':
                 edited_data = knn.edited_knn(training_data, validate_data)
                 print("Finished enn.")
                 print("Making ", len(edited_data), " clusters.")
-                kc = kcluster(len(edited_data), 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
+                kc = kcluster(len(edited_data), 10, training_data, db.get_classifier_attr_cols(), 'k-medoids')
             else:
                 num_clusters = math.sqrt(len(training_data))
                 kc = kcluster(num_clusters, 100, training_data, db.get_classifier_attr_cols(), 'k-medoids')
