@@ -23,11 +23,12 @@ class kcluster:
     @param  in_db   The input database object to perform our functionality upon
     @brief    The constructor for kcluster
     """
-    def __init__(self, in_num_clusters, in_max_iters, in_db):
+    def __init__(self, in_num_clusters, in_max_iters, in_db, class_cols):
         self.db = in_db
         self.k = in_num_clusters
         self.max_iters = in_max_iters
         # self.tol = in_tolerance
+        self.class_cols = class_cols
         self.centroids = []
         self.medoids = []
         self.kmeans_clusters = []
@@ -155,7 +156,7 @@ class kcluster:
 
         # For each
         # (len(x) and len(y) are completely interchangable)
-        for attr_idx in range(len(x)):
+        for attr_idx in self.class_cols:
 
             # If the current attribute is continuous...
             if (type(x[attr_idx]) != str):
