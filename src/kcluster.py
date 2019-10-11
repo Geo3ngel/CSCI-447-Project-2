@@ -23,7 +23,7 @@ class kcluster:
     @param  in_db   The input database object to perform our functionality upon
     @brief    The constructor for kcluster
     """
-    def __init__(self, in_num_clusters, in_max_iters, in_db, class_cols):
+    def __init__(self, in_num_clusters, in_max_iters, in_db, class_cols, in_func):
         self.db = in_db
         self.k = in_num_clusters
         self.max_iters = in_max_iters
@@ -33,12 +33,17 @@ class kcluster:
         self.medoids = []
         self.kmeans_clusters = []
 
-        self.calc_centroids()
-        print("Finished Centroids.")
-        self.calc_kmeans_clusters()
-        print("Finished kmeans clusters.")
-        self.calc_medoids_and_clusters()
-        print("Finished medoids and clusters.")
+        if in_func == 'k-means':
+
+            self.calc_centroids()
+            print("Finished Centroids.")
+            self.calc_kmeans_clusters()
+            print("Finished kmeans clusters.")
+        
+        elif in_func == 'k-medoids':
+        
+            self.calc_medoids_and_clusters()
+            print("Finished medoids and clusters.")
 
     
     """ ---------------------------------------------------
