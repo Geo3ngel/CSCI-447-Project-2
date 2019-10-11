@@ -84,6 +84,7 @@ def prepare_db(database, pm):
     return db
 
 def main_execution():
+    # Sets to store all the loss func avs
     k_nn_classification_avgs = []
     k_nn_regress_avgs = []
     enn_avgs = []
@@ -93,6 +94,13 @@ def main_execution():
     k_medoid_classification_avgs = []
     k_medoid_regress_avgs = []
     
+    reduction_funcs = [
+        'edited_nn',
+        'condensed_nn',
+        'k_means',
+        'k_medoids'
+    ]
+
     # Initializes path manager with default directory as databases.
     pm = path_manager()
 
@@ -103,6 +111,42 @@ def main_execution():
 
     for database in selected_dbs:
         db = prepare_db(database, pm)
+    
+    # Start k-fold cross validation
+    print("RUNNING K-FOLD CROSS VALIDATION")
+    # Prepare data for k-fold
+    binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db.get_data())
+    # Extract validation set
+    bin_lengths, validate_data, binned_data = validate.get_validate(bin_lengths, binned_data)
+    debug_file.write('\n\nVALIDATION DATA: \n')
+    for row in validate_data:
+        debug_file.write(str(row) + '\n')
+
+    knn = knn(5, db.get_dataset_type(), \
+              db.get_classifier_col(), \
+              db.get_classifier_attr_cols())
+    #NOTE binned_data needs to still be shuffled somewhere above here
+
+    # Run k-fold on just k-means first
+    k_fold_results = validate.k_fold(9, binned_data, \
+                                    validate_data, bin_lengths, \
+                                    db, False, db.get_dataset_type(), \
+                                    knn, debug_file, output_file)
+    
+    if db.get_dataset_type == 'classification':
+        k_nn_classification_avgs.append(sum(k_fold_results) / len(k_fold_results))
+    else:
+        k_nn_regress_avgs.append(sum(k_fold_results) / len(k_fold_results))
+    
+    for func in reduction_funcs:
+        #NOTE this bitch will probs have to use 9 instead of 10 because 
+        # we are removing a bin from bin_lengths
+        validate.k_fold(9, binned_data, \
+                        validate_data, bin_lengths, db, \
+                        False, db.get_dataset_type(), \
+                        knn, debug_file, output_file, 'edited_nn')
+
+
 
 
 main_execution()

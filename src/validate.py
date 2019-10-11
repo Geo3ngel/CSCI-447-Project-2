@@ -155,5 +155,9 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
     
     print("0-1 LOSS RESULTS: ", loss_results)
     print("MAE RESULTS: ", mae_results)
-
+    # Return the correct loss function results
+    if type == 'classification':
+        return loss_results
+    else:
+        return mae_results
         
