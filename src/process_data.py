@@ -190,6 +190,7 @@ def random_data_from(dataset, percent):
             
             # Adds the row data to random dataset.
             random_dataset.append(data_row)
+    return random_dataset
   
 # Shuffles X% of the data for an attribute specified by row of dataset.
 def shuffle_data(training_data, percent, attribute):

@@ -95,8 +95,8 @@ def main_execution():
     k_medoid_regress_avgs = []
     
     reduction_funcs = [
-        'edited_nn',
-        'condensed_nn',
+        # 'edited_nn',
+        # 'condensed_nn',
         'k_means',
         'k_medoids'
     ]
@@ -164,6 +164,11 @@ def main_execution():
                 if func == 'edited_nn' or func == 'condensed_nn':
                     continue
                 
+                # Shrink data to quarter of the size
+                db_small = process_data.random_data_from(db.get_data(), 0.25)
+                # Re-bin it after shrinking
+                binned_data, bin_lengths = process_data.separate_data(db.get_attr(), db_small) 
+
                 k_fold_results = validate.k_fold(9, binned_data, \
                                                 validate_data, bin_lengths, db, \
                                                 True, db.get_dataset_type(), \

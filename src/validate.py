@@ -7,6 +7,7 @@
 from copy import deepcopy
 import process_data
 import random
+from kcluster import kcluster
 
 '''
 @brief  Create a validation data set to be used with
@@ -117,8 +118,26 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
             debug_file.write('\n\n REDUCED TRAINING DATA: \n')
             for row in training_data:
                 debug_file.write(str(row) + row + '\n')
-        elif reduction_func = 'k_means':
-        elif reduction_func = 'k_medoids':
+        elif reduction_func == 'k_means':
+            if type == 'classification':
+                edited_data = knn.edited_knn(training_data, validate_data)
+                kc = kcluster(len(edited_data), 100, training_data)
+            else:
+                kc = kcluster(10, 100, training_data)
+            training_data = kc.get_centroids()
+
+        elif reduction_func == 'k_medoids':
+            if type == 'classification':
+                edited_data = knn.edited_knn(training_data, validate_data)
+                kc = kcluster(len(edited_data), 100, training_data)
+            else:
+                kc = kcluster(10, 100, training_data)
+            medoid_idxs = kc.get_medoids()
+            new_training_data = []
+            for idx in medoid_idxs:
+                new_training_data.append(training_data[idx])
+            training_data = new_training_data
+
 
         
         print('CONDENSED TRAINING DATA LENGTH: ', len(training_data))

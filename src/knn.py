@@ -162,15 +162,17 @@ class knn:
                 if predicted_class != correct_class:
                     # print('REMOVING POINT')
                     edited_data.remove(point)
+                # print('------------------------------------')
             # END FOR LOOP
             #Check performance at end of each scan
             past_performance = current_performance
             current_performance = self.get_performance(edited_data, validation_data)
             print("PAST PERFORMANCE:    ", past_performance)
             print("CURRENT PERFORMANCE: ", current_performance)
-            print('------------------------------------')
+            print("LOOP COUNT: ", loop_count)
             loop_count += 1
-            if current_performance < past_performance or loop_count <= 10:
+            print('--------------------------------------------')
+            if current_performance < past_performance or loop_count >= 10:
                 performance_improving = False
         # END WHILE LOOP
         return edited_data
