@@ -11,6 +11,13 @@ a) General Code %: (TBD once assignment is finished)
 b) Specific areas of Responsibilities:
     -Pathing Manager
     -Preprocessing of data into usable format
+    -Everything to do with the .attr files for each database
+    -bootstrap selection & shuffling methods
+    -Tuning of attributes
+    -Main loop selecting which database to run/ run all
+    -formatting of every .attr files
+    -lots of debugging
+    -Paper portions for tuning, preprocessing subsections,& part of the problem statement/Introduction.
 
 Henry Soule:
 a) General Code %: (TBD once assignment is finished)
