@@ -25,7 +25,7 @@ class kcluster:
     """
     def __init__(self, in_num_clusters, in_max_iters, in_db, class_cols, in_func):
         self.db = in_db
-        self.k = in_num_clusters
+        self.k = int(in_num_clusters)
         self.max_iters = in_max_iters
         # self.tol = in_tolerance
         self.class_cols = class_cols

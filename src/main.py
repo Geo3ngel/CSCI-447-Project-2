@@ -12,8 +12,8 @@ from path_manager import pathManager as path_manager
 import validate
 import statistics
 
-debug_file = open("debug_output.txt", "w")
-output_file = open("output_file.txt", "w+")
+debug_file = open("machine_debug_output.txt", "w")
+output_file = open("machine_output_file.txt", "w+")
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_db(databases):  

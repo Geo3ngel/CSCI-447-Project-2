@@ -183,9 +183,17 @@ def main_execution():
                 # Remove attr_idx from the removal queue if the accuracy is worse.
                 print("COMPARISON FOR:", attr_idx, ", VALUES:", norm_sum, ">", attr_removed_sum)
                 print(k_nearest.get_class_cols())
-                if norm_sum < attr_removed_sum:
-                    # Add to removal queue.
-                    removal_queue.append(attr_idx)
+                
+                
+                if db.get_dataset_type() == 'classification':
+                    if norm_sum < attr_removed_sum:
+                        # Add to removal queue.
+                        removal_queue.append(attr_idx)
+                elif db.get_dataset_type() == 'regression':
+                    if norm_sum > attr_removed_sum:
+                        # Add to removal queue.
+                        removal_queue.append(attr_idx)
+                    
             
             final_attrs = k_nearest.get_class_cols()
             
@@ -198,5 +206,6 @@ def main_execution():
             db.set_classifier_attr_cols(final_attrs)
                 
             print(database, " is using attribute colums: ", db.get_classifier_attr_cols())
-
+            print(db.get_dataset_type())
+            
 main_execution()

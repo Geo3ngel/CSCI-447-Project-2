@@ -8,6 +8,7 @@ from copy import deepcopy
 import process_data
 import random
 from kcluster import kcluster
+import math
 
 '''
 @brief  Create a validation data set to be used with
