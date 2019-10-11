@@ -3,7 +3,11 @@ Responsibilities by Group members:
 Dana Parker:
 a) General Code %: (TBD once assignment is finished)
 
-b) Specific areas of Responsibilities:
+b) Specific areas of Responsibilities: 
+    -k-medoids
+    -k-clustering
+    -contributed to various sections of the paper (he did a lot -George)
+    -much debugging
 
 George Engel:
 a) General Code %: (TBD once assignment is finished)
@@ -18,6 +22,7 @@ b) Specific areas of Responsibilities:
     -formatting of every .attr files
     -lots of debugging
     -Paper portions for tuning, preprocessing subsections,& part of the problem statement/Introduction.
+    -Helped debug/build the algorithms (specifically for knn)
 
 Henry Soule:
 a) General Code %: (TBD once assignment is finished)
