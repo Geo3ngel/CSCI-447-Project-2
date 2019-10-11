@@ -117,7 +117,7 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
             training_data = knn.condensed_nn(training_data)
             debug_file.write('\n\n REDUCED TRAINING DATA: \n')
             for row in training_data:
-                debug_file.write(str(row) + row + '\n')
+                debug_file.write(str(row) + '\n')
         elif reduction_func == 'k_means':
             if type == 'classification':
                 edited_data = knn.edited_knn(training_data, validate_data)

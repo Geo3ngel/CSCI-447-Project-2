@@ -200,6 +200,8 @@ class knn:
             past_length = current_length
             current_length = len(z)
             loop_count += 1
-            print('PAST LENGTH: ', past_length)
-            print('CURRENT LENGTH: ', current_length)
+            # print('PAST LENGTH: ', past_length)
+            # print('CURRENT LENGTH: ', current_length)
+        for row in z:
+            row.remove(row[-1])
         return z

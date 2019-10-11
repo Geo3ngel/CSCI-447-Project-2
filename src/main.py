@@ -13,7 +13,7 @@ import validate
 import statistics
 
 debug_file = open("debug_output.txt", "w")
-output_file = open("output_file.txt", "w")
+output_file = open("output_file.txt", "w+")
 
 # Asks for user to select a database from a list presented from current database collection directory.
 def select_db(databases):  
@@ -95,8 +95,8 @@ def main_execution():
     k_medoid_regress_avgs = []
     
     reduction_funcs = [
-        # 'edited_nn',
-        # 'condensed_nn',
+        'edited_nn',
+        'condensed_nn',
         'k_means',
         'k_medoids'
     ]
@@ -108,13 +108,11 @@ def main_execution():
     # for the user to select as the current database.
     selected_dbs = select_db(pm.find_folders(pm.get_databases_dir()))
     # TODO: change to get dataset type from db
-
     for database in selected_dbs:
         db = prepare_db(database, pm)
         k_nearest = knn(5, db.get_dataset_type(), \
                 db.get_classifier_col(), \
                 db.get_classifier_attr_cols())
-
         # Start k-fold cross validation
         print("RUNNING K-FOLD CROSS VALIDATION")
         # Prepare data for k-fold
