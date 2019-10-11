@@ -41,12 +41,13 @@ class knn:
     # Computes the euclidean distances for any dimension, so long as the data instances are consistent in dimension.
     def euclidean_distance(self, data_instance_a, data_instance_b):
         distance = 0
-        for x in range(len(data_instance_a)):
-            if type(data_instance_a[x]) == str:
-                if data_instance_a[x] != data_instance_b[x]:
+        # for x in range(len(data_instance_a)):
+        for idx in self.class_cols:
+            if type(data_instance_a[idx]) == str:
+                if data_instance_a[idx] != data_instance_b[idx]:
                     distance += 1
             else:
-                distance += pow((data_instance_a[x] - data_instance_b[x]), 2)
+                distance += pow((data_instance_a[idx] - data_instance_b[idx]), 2)
         return math.sqrt(distance)
     
     # Auxiliary function for sorting
