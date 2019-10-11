@@ -30,6 +30,11 @@ class knn:
     def get_type(self):
         return self.type
     
+    def set_class_cols(self, class_cols):
+        self.class_cols = class_cols
+        
+    def get_class_cols(self):
+        return self.class_cols
 
 
 

@@ -24,7 +24,7 @@ class database:
         
     def convert_discrete_to_float(self):
         self.data = process_data.convert(self.data)
-        print("SELF DATA:", self.data)
+        # print("SELF DATA:", self.data)
         
     def to_string(self):
         if len(self.data) < 1:
@@ -47,6 +47,9 @@ class database:
     
     def get_classifier_attr_cols(self):
         return self.classifier_attr_columns
+    
+    def set_classifier_attr_cols(self, attr_cols):
+        self.classifier_attr_columns = attr_cols
     
     def get_missing_symbol(self):
         return self.missing_symbol
