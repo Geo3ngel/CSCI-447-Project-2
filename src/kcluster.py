@@ -33,9 +33,11 @@ class kcluster:
         self.kmeans_clusters = []
 
         self.calc_centroids()
+        print("Finished Centroids.")
         self.calc_kmeans_clusters()
-
+        print("Finished kmeans clusters.")
         self.calc_medoids_and_clusters()
+        print("Finished medoids and clusters.")
 
     
     """ ---------------------------------------------------
