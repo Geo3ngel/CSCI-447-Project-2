@@ -12,9 +12,9 @@ import operator
 import random
 
 class knn:
-    def __init__(self, k, type, class_idx, class_cols):
+    def __init__(self, k, in_type, class_idx, class_cols):
         self.k = k
-        self.type = type
+        self.type = in_type
         self.class_idx = class_idx
         self.class_cols = class_cols
     
