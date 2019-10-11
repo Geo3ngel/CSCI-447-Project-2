@@ -117,6 +117,9 @@ def k_fold(k, binned_data_set, validate_data, bin_lengths, db, shuffle, type, kn
             debug_file.write('\n\n REDUCED TRAINING DATA: \n')
             for row in training_data:
                 debug_file.write(str(row) + row + '\n')
+        elif reduction_func = 'k_means':
+        elif reduction_func = 'k_medoids':
+
         
         print('CONDENSED TRAINING DATA LENGTH: ', len(training_data))
         
