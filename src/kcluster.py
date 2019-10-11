@@ -116,7 +116,6 @@ class kcluster:
                     rand_idx = rand.randrange(len(discrete_attrs_vals[idx]))
                     curr_cent[idx] = discrete_attrs_vals[idx][rand_idx]
                     
-
         self.set_centroids(centroids)
 
     """ ---------------------------------------------------    
@@ -224,31 +223,41 @@ class kcluster:
         attr_mins, attr_maxs, discrete_attrs_vals = self.find_attrs_min_max()
 
         # Initialize the centroids randomly
-        self.init_centroids(attr_mins, attr_maxs, discrete_attrs_vals)
-        centroids = self.get_centroids()[:]
+        clusters_arent_empty = False
+        while clusters_arent_empty is False:
+            self.init_centroids(attr_mins, attr_maxs, discrete_attrs_vals)
+            clusters = [[] for i in range(len(self.get_centroids()[:]))]
+            for ex_idx, ex in enumerate(self.get_db()[:]):
+
+                # Find which cluster we are in
+                cent_idx = self.assign_ex(ex, True)
+                clusters[cent_idx].append(ex)
+            
+            clusters_arent_empty = True
+            for c in clusters:
+                if len(c) == 0:
+                    clusters_arent_empty = False
 
         # Holds the number of examples contained in each cluster
-        size_of_clust = [0 for i in range(self.get_k())]
-
-        # Holds which cluster each example belongs to
-        ex_to_clust = [-1 for i in range(len(self.get_db()))]
-
-        clusters = [[] for i in range(self.get_k())]
+        # size_of_clust = [0 for i in range(self.get_k())]
 
         # Calculate the centroids
         for curr_iter in range(self.get_max_iters()):
-            
-            # We need a way to keep track of whether
-            # the centroids were changed after an iteration
-            # TODO: fix to use tolerance?
-            # centroids_were_changed = False
+
+            # Holds which cluster each example belongs to
+            ex_to_clust = [-1 for i in range(len(self.get_db()))]
+
+            # Creates a list of examples per cluster
+            clusters = [[] for i in range(self.get_k())]
+
+            centroids = self.get_centroids()[:]
 
             for ex_idx, ex in enumerate(self.get_db()[:]):
 
-                # # Find which cluster we are in
+                # Find which cluster we are in
                 cent_idx = self.assign_ex(ex, True)
 
-                size_of_clust[cent_idx] += 1
+                # size_of_clust[cent_idx] += 1
 
                 # centroids[cent_idx] = self.update_centroid( \
                 #     centroids[cent_idx], \
@@ -268,43 +277,45 @@ class kcluster:
             # For every centroid...
             for cent_idx in range(len(centroids)):
 
-                attr_avgs = [0 if len(discrete_attrs_vals[i]) == 0 \
-                    else {} \
-                    for i in range(len(ex))]
+                if len(clusters[cent_idx]) != 0:
 
-                # For every example in that centroid's respective cluster
-                for ex_idx, ex in enumerate(clusters[cent_idx]):
+                    attr_avgs = [0 if len(discrete_attrs_vals[i]) == 0 \
+                        else {} \
+                        for i in range(len(centroids[cent_idx]))]
 
-                    # For every attribute in that example...
-                    for attr_idx, attr in enumerate(ex):
+                    # For every example in that centroid's respective cluster
+                    for ex_idx, ex in enumerate(clusters[cent_idx]):
 
-                        # If the current attribute is quantitative...
-                        if len(discrete_attrs_vals[attr_idx]) == 0:
-                            attr_avgs[attr_idx] += attr
-                        
-                        # If the current attribute is categorical...
-                        else:
-                            if attr in attr_avgs[attr_idx]:
-                                attr_avgs[attr_idx][attr] += 1
+                        # For every attribute in that example...
+                        for attr_idx, attr in enumerate(ex):
+
+                            # If the current attribute is quantitative...
+                            if len(discrete_attrs_vals[attr_idx]) == 0:
+                                attr_avgs[attr_idx] += attr
+                            
+                            # If the current attribute is categorical...
                             else:
-                                attr_avgs[attr_idx][attr] = 1
+                                if attr in attr_avgs[attr_idx]:
+                                    attr_avgs[attr_idx][attr] += 1
+                                else:
+                                    attr_avgs[attr_idx][attr] = 1
 
-                # For every attribute
-                for attr_idx, attr in enumerate(attr_avgs):
-                    
-                    if type(attr) == dict:
-                        max_val = max(attr_avgs[attr_idx].values())
-                        max_key = ''
-                        for key, val in attr_avgs[attr_idx].items():
-                            if val == max_val:
-                                max_key = key
-                        attr_avgs[attr_idx] = max_key
+                    # For every attribute
+                    for attr_idx, attr in enumerate(attr_avgs):
+                        
+                        if type(attr) == dict:
+                            max_val = max(attr_avgs[attr_idx].values())
+                            max_key = ''
+                            for key, val in attr_avgs[attr_idx].items():
+                                if val == max_val:
+                                    max_key = key
+                            attr_avgs[attr_idx] = max_key
 
-                    else:
-                        if len(clusters[cent_idx]) != 0:
-                            attr_avgs[attr_idx] /= len(clusters[cent_idx])
+                        else:
+                            if len(clusters[cent_idx]) != 0:
+                                attr_avgs[attr_idx] /= len(clusters[cent_idx])
 
-                new_centroids[cent_idx] = attr_avgs[:]
+                    new_centroids[cent_idx] = attr_avgs[:]
 
             # if (centroids_were_changed is False):
             #     break
